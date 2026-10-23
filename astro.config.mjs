@@ -3,8 +3,8 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// Canonical site URL: set SITE_URL env var at build time (Cloudflare Pages 环境变量)
-const site = process.env.SITE_URL || 'https://example.com';
+// Canonical site URL: 默认生产域名；绑自定义域名后用 SITE_URL 环境变量覆盖
+const site = process.env.SITE_URL || 'https://yh-4pn.pages.dev';
 
 export default defineConfig({
   site,

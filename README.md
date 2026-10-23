@@ -54,15 +54,32 @@ npm run preview    # 预览构建产物
 
 ## 部署到 Cloudflare Pages
 
-1. 仓库已推送至 GitHub：`https://github.com/Q7748533/yh`（分支 `main`）；
-2. Cloudflare Dashboard → Workers & Pages → Create → Pages → Connect to Git；
-3. 构建配置：Framework preset 选 **Astro**；Build command `npm run build`；Build output directory `dist`；
-4. 环境变量加 `SITE_URL=https://你的域名`（及 GA4/beacon 变量）；
-5. Node 版本：仓库含 `.nvmrc`（22），Pages 自动读取；
-6. 自定义域名在 Pages 项目 → Custom domains 绑定；
-7. PR 会自动生成 Preview 部署用于审稿。
+**当前状态：已上线 `https://yh-4pn.pages.dev`**（项目名 `yh`，账号 frankfraaa@gmail.com）。
 
-也可以本地直接部署：`npx wrangler pages deploy dist`。
+### 方式一：本地 wrangler 直传（当前使用）
+
+```bash
+npm run deploy     # 构建 + 质检 + 上传 dist 到 Pages
+```
+
+等价于 `wrangler pages deploy dist --project-name=yh --branch=main`。需要本机已 `wrangler login`（凭据存于 `%APPDATA%\xdg.config\.wrangler`）。
+
+### 方式二：连接 Git 自动构建
+
+1. Cloudflare Dashboard → Workers & Pages → `yh` → Settings → Builds & deployments → Connect to Git，选 `Q7748533/yh`；
+2. Build command `npm run build`，Output directory `dist`；
+3. 环境变量：`SITE_URL`（自定义域名时必填）、`PUBLIC_GA4_ID`、`PUBLIC_CF_BEACON_TOKEN`；
+4. 连接后每次 push 到 `main` 自动部署，PR 生成 Preview 部署。
+
+> 两种方式不要同时用：Git 连接后，手动 `npm run deploy` 会创建独立部署，可能造成版本不一致。
+
+### 自定义域名
+
+Pages 项目 → Custom domains 绑定后，把 `SITE_URL` 改成正式域名并重新部署，canonical / sitemap / robots 会同步更新。
+
+### 仓库
+
+`https://github.com/Q7748533/yh`（public，分支 `main`）。
 
 ## 上线前替换清单
 
