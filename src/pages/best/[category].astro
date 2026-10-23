@@ -1,0 +1,114 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import CtaButton from '../../components/CtaButton.astro';
+import { getCategoryMeta } from '../../data/categoryMeta';
+import { breadcrumbSchema, itemListSchema } from '../../utils/schema';
+import { reviewSlug } from '../../utils/seo';
+
+export async function getStaticPaths() {
+  const reviews = await getCollection('reviews', (r) => !r.data.draft);
+  const categories = [...new Set(reviews.map((r) => r.data.category))];
+  return categories.map((category) => ({
+    params: { category },
+    props: { reviews: reviews.filter((r) => r.data.category === category) },
+  }));
+}
+
+const { category } = Astro.params;
+const { reviews } = Astro.props;
+const meta = getCategoryMeta(category);
+
+const sorted = [...reviews].sort((a, b) => b.data.rating - a.data.rating);
+
+// 对比表：取所有产品 spec key 的并集（前 5 个），缺失值显示 —
+const specKeys = [...new Set(reviews.flatMap((r) => Object.keys(r.data.specs)))].slice(0, 5);
+const tableRows = specKeys.map((key) => ({
+  label: key,
+  values: reviews.map((r) => r.data.specs[key] ?? '—'),
+}));
+
+const year = new Date().getFullYear();
+const jsonLd = [
+  itemListSchema(
+    Astro.site,
+    `Best ${meta.name} (${year})`,
+    sorted.map((r) => ({ name: r.data.title, path: `/reviews/${reviewSlug(r.id)}/`, rating: r.data.rating }))
+  ),
+  breadcrumbSchema(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: `Best ${meta.name}`, path: `/best/${category}/` },
+  ]),
+];
+
+---
+
+<Base
+  title={`Best ${meta.name} (${year})`}
+  description={meta.intro.slice(0, 155)}
+  path={`/best/${category}/`}
+  jsonLd={jsonLd}
+>
+  <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: `Best ${meta.name}` }]} />
+
+  <div class="mx-auto max-w-4xl px-4 py-8">
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Best {meta.name} ({year})</h1>
+
+    {
+      meta.intro ? (
+        <p class="content-body mt-4 text-lg leading-8 text-slate-700">{meta.intro}</p>
+      ) : (
+        <p class="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800">
+          TODO: 请在 src/data/categoryMeta.ts 中补充该品类的人工导语（程序化 SEO 防薄内容要求）。
+        </p>
+      )
+    }
+
+    {
+      tableRows.length > 0 && (
+        <section class="mt-8">
+          <h2 class="text-2xl font-semibold text-slate-900">Quick comparison</h2>
+          <ComparisonTable
+            products={sorted.map((r) => ({
+              name: r.data.product,
+              href: `/reviews/${reviewSlug(r.id)}/`,
+              highlight: r.id === sorted[0]?.id,
+            }))}
+            rows={tableRows}
+          />
+        </section>
+      )
+    }
+
+    <section class="mt-10">
+      <h2 class="text-2xl font-semibold text-slate-900">Our picks</h2>
+      <ol class="mt-4 space-y-6">
+        {
+          sorted.map((r, i) => (
+            <li class="rounded-xl border border-slate-200 p-5">
+              <div class="flex items-center gap-3">
+                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white">
+                  {i + 1}
+                </span>
+                <h3 class="text-lg font-semibold text-slate-900">
+                  <a href={`/reviews/${reviewSlug(r.id)}/`} class="hover:text-blue-700">
+                    {r.data.product}
+                  </a>
+                </h3>
+                <span class="ml-auto rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700">
+                  {r.data.rating.toFixed(1)}
+                </span>
+              </div>
+              <p class="mt-3 text-sm text-slate-600">{r.data.description}</p>
+              <div class="mt-3">
+                <CtaButton href={r.data.affiliateUrl} priceUsd={r.data.priceUsd} priceCheckedAt={r.data.priceCheckedAt} itemName={r.data.product} />
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+  </div>
+</Base>

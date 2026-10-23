@@ -1,0 +1,47 @@
+---
+// 自制数据图表：从 frontmatter/内联数据生成 SVG 条形图（方案书 4.4：无实物样品条件下的原创图片主力形态）
+interface Item {
+  label: string;
+  value: number;
+  unit?: string;
+}
+
+interface Props {
+  items: Item[];
+  caption?: string;
+}
+
+const { items, caption } = Astro.props;
+const max = Math.max(...items.map((i) => i.value), 1);
+const barW = 620;
+const rowH = 34;
+const labelW = 170;
+const valueW = 90;
+const chartW = barW + labelW + valueW;
+const chartH = items.length * rowH + 10;
+---
+
+<figure class="my-6">
+  <svg viewBox={`0 0 ${chartW} ${chartH}`} width="100%" role="img" class="max-w-2xl">
+    <title>{caption ?? 'Specification comparison chart'}</title>
+    {
+      items.map((item, i) => {
+        const y = i * rowH + 6;
+        const w = Math.max(2, (item.value / max) * barW);
+        return (
+          <g>
+            <text x={labelW - 8} y={y + 15} text-anchor="end" font-size="12" fill="#475569">
+              {item.label}
+            </text>
+            <rect x={labelW} y={y + 3} width={w} height={16} rx="3" fill="#2563eb" />
+            <text x={labelW + w + 8} y={y + 15} font-size="12" font-weight="600" fill="#1e293b">
+              {item.value}
+              {item.unit ?? ''}
+            </text>
+          </g>
+        );
+      })
+    }
+  </svg>
+  {caption && <figcaption class="mt-2 text-xs text-slate-500">{caption}</figcaption>}
+</figure>

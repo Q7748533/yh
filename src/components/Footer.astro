@@ -1,0 +1,20 @@
+---
+import { SITE_NAME } from '../consts';
+---
+
+<footer class="border-t border-slate-200 bg-slate-50">
+  <div class="mx-auto max-w-6xl px-4 py-8 text-sm text-slate-600">
+    <p class="font-semibold text-slate-700">{SITE_NAME}</p>
+    <p class="mt-2 max-w-2xl">
+      As an Amazon Associate we earn from qualifying purchases. This site contains affiliate links; our ratings and
+      conclusions are independent and are never sold to brands.
+    </p>
+    <nav class="mt-4 flex flex-wrap gap-4">
+      <a href="/about/" class="hover:text-slate-900">About</a>
+      <a href="/methodology/" class="hover:text-slate-900">Methodology</a>
+      <a href="/disclosure/" class="hover:text-slate-900">Affiliate Disclosure</a>
+      <a href="/contact/" class="hover:text-slate-900">Contact</a>
+    </nav>
+    <p class="mt-4 text-xs text-slate-400">© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
+  </div>
+</footer>

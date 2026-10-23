@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Contact" description="Contact our editorial team." path="/contact/">
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900">Contact</h1>
+    <div class="content-body mt-6">
+      <p>
+        Corrections, tips and review requests are all welcome. We read everything and reply to corrections first.
+      </p>
+      <p>
+        {/* TODO: 上线前替换为真实联系邮箱 */}
+        Email: <strong>contact@example.com</strong>
+      </p>
+      <h2>What to include</h2>
+      <ul>
+        <li>For corrections: the page URL and the specific claim you believe is wrong, with a source if you have one.</li>
+        <li>For review requests: the exact product model and where it is sold.</li>
+      </ul>
+    </div>
+  </div>
+</Base>

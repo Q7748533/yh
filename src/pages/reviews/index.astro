@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CtaButton from '../../components/CtaButton.astro';
+import { itemListSchema } from '../../utils/schema';
+import { reviewSlug } from '../../utils/seo';
+import { SITE_NAME } from '../../consts';
+
+const reviews = (await getCollection('reviews', (r) => !r.data.draft)).sort(
+  (a, b) => b.data.updatedAt.getTime() - a.data.updatedAt.getTime()
+);
+
+const jsonLd = [
+  itemListSchema(
+    Astro.site,
+    'All reviews',
+    reviews.map((r) => ({ name: r.data.title, path: `/reviews/${reviewSlug(r.id)}/`, rating: r.data.rating }))
+  ),
+];
+---
+
+<Base title="All Reviews" description={`Browse all ${SITE_NAME} product reviews.`} path="/reviews/" jsonLd={jsonLd}>
+  <div class="mx-auto max-w-4xl px-4 py-10">
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900">All reviews</h1>
+    <p class="mt-2 text-slate-600">Every review on this site, newest first.</p>
+
+    <ul class="mt-8 space-y-4">
+      {
+        reviews.map((r) => (
+          <li class="rounded-xl border border-slate-200 p-5">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="text-sm font-medium text-blue-700">{r.data.brand}</p>
+                <a href={`/reviews/${reviewSlug(r.id)}/`} class="text-lg font-semibold text-slate-900 hover:text-blue-700">
+                  {r.data.title}
+                </a>
+                <p class="mt-1 text-sm text-slate-600">{r.data.description}</p>
+              </div>
+              <span class="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700">
+                {r.data.rating.toFixed(1)}
+              </span>
+            </div>
+            <div class="mt-3">
+              <CtaButton href={r.data.affiliateUrl} priceUsd={r.data.priceUsd} priceCheckedAt={r.data.priceCheckedAt} itemName={r.data.product} />
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>

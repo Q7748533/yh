@@ -1,0 +1,95 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CtaButton from '../components/CtaButton.astro';
+import { getCategoryMeta } from '../data/categoryMeta';
+import { reviewSlug } from '../utils/seo';
+import { SITE_NAME, SITE_TAGLINE } from '../consts';
+import { organizationSchema, websiteSchema } from '../utils/schema';
+
+const reviews = (await getCollection('reviews', (r) => !r.data.draft)).sort(
+  (a, b) => b.data.updatedAt.getTime() - a.data.updatedAt.getTime()
+);
+
+const categories = [...new Set(reviews.map((r) => r.data.category))];
+
+const jsonLd = [
+  websiteSchema(Astro.site, SITE_NAME, SITE_TAGLINE),
+  organizationSchema(Astro.site, SITE_NAME),
+];
+---
+
+<Base path="/" jsonLd={jsonLd}>
+  <!-- Hero -->
+  <section class="border-b border-slate-200 bg-slate-50">
+    <div class="mx-auto max-w-4xl px-4 py-16 text-center">
+      <h1 class="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">{SITE_TAGLINE}</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
+        We analyze specifications, cross-check them against independent professional feedback, and show you exactly which
+        numbers each claim rests on. No paid placements, ever.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        {
+          categories.map((c) => (
+            <a
+              href={`/best/${c}/`}
+              class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-slate-400"
+            >
+              Best {getCategoryMeta(c).name}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest reviews -->
+  <section class="mx-auto max-w-4xl px-4 py-12">
+    <h2 class="text-2xl font-semibold text-slate-900">Latest reviews</h2>
+    <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+      {
+        reviews.slice(0, 6).map((r) => (
+          <li class="flex flex-col rounded-xl border border-slate-200 p-5">
+            <p class="text-sm font-medium text-blue-700">{r.data.brand}</p>
+            <a href={`/reviews/${reviewSlug(r.id)}/`} class="mt-1 text-lg font-semibold text-slate-900 hover:text-blue-700">
+              {r.data.title}
+            </a>
+            <p class="mt-2 flex-1 text-sm text-slate-600">{r.data.description}</p>
+            <div class="mt-4 flex items-center justify-between">
+              <span class="rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700">
+                {r.data.rating.toFixed(1)}/5
+              </span>
+              <a href={`/reviews/${reviewSlug(r.id)}/`} class="text-sm font-medium text-blue-700 hover:underline">
+                Read review →
+              </a>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Trust strip -->
+  <section class="border-t border-slate-200 bg-slate-50">
+    <div class="mx-auto grid max-w-4xl gap-6 px-4 py-12 sm:grid-cols-3">
+      <div>
+        <h3 class="font-semibold text-slate-900">Research-based</h3>
+        <p class="mt-1 text-sm text-slate-600">
+          Every conclusion traces back to a primary source. Our methodology page shows exactly how we work.
+        </p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-slate-900">No paid placements</h3>
+        <p class="mt-1 text-sm text-slate-600">
+          Brands cannot buy a score or a ranking. Affiliate commissions never influence our conclusions.
+        </p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-slate-900">Kept up to date</h3>
+        <p class="mt-1 text-sm text-slate-600">
+          Prices and specs are re-checked on a schedule, and every page shows its last update date.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>

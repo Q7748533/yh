@@ -1,0 +1,28 @@
+---
+interface Props {
+  specs: Record<string, string>;
+}
+
+const { specs } = Astro.props;
+const entries = Object.entries(specs);
+---
+
+{
+  entries.length > 0 && (
+    <div class="my-6 overflow-x-auto">
+      <table class="w-full border-collapse text-sm">
+        <caption class="sr-only">Specifications</caption>
+        <tbody>
+          {entries.map(([key, value]) => (
+            <tr class="border-b border-slate-100">
+              <th scope="row" class="w-2/5 py-2 pr-4 text-left font-medium text-slate-500">
+                {key}
+              </th>
+              <td class="py-2 text-slate-800">{value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}

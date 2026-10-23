@@ -1,0 +1,25 @@
+---
+// Pagefind 站内搜索：构建后由 `pagefind --site dist` 生成索引与 UI 资源
+// dev 模式下索引不存在，仅显示占位
+---
+
+{
+  import.meta.env.PROD ? (
+    <div class="searchbox">
+      <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+      <div id="search" />
+      <script src="/pagefind/pagefind-ui.js" is:inline />
+      <script is:inline>
+        window.addEventListener('DOMContentLoaded', () => {
+          if (typeof PagefindUI !== 'undefined') {
+            new PagefindUI({ element: '#search', showImages: false, showSubResults: true, resetStyles: true });
+          }
+        });
+      </script>
+    </div>
+  ) : (
+    <div class="rounded-md border border-dashed border-slate-300 px-3 py-2 text-xs text-slate-400">
+      Search (prod build)
+    </div>
+  )
+}

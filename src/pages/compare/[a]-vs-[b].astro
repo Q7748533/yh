@@ -1,0 +1,111 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import CtaButton from '../../components/CtaButton.astro';
+import { breadcrumbSchema } from '../../utils/schema';
+import { reviewSlug } from '../../utils/seo';
+
+export async function getStaticPaths() {
+  const reviews = await getCollection('reviews', (r) => !r.data.draft);
+  const byCategory = new Map<string, typeof reviews>();
+  for (const r of reviews) {
+    const list = byCategory.get(r.data.category) ?? [];
+    list.push(r);
+    byCategory.set(r.data.category, list);
+  }
+
+  const paths: { params: { a: string; b: string }; props: { reviews: typeof reviews } }[] = [];
+  for (const list of byCategory.values()) {
+    for (let i = 0; i < list.length; i++) {
+      for (let j = i + 1; j < list.length; j++) {
+        const [x, y] = [list[i], list[j]].sort((p, q) => p.data.rating - q.data.rating);
+        paths.push({
+          params: { a: reviewSlug(x.id), b: reviewSlug(y.id) },
+          props: { reviews: [x, y] },
+        });
+      }
+    }
+  }
+  return paths;
+}
+
+const { reviews } = Astro.props;
+const [x, y] = reviews;
+
+const specKeys = [...new Set([...Object.keys(x.data.specs), ...Object.keys(y.data.specs)])];
+const rows = specKeys.map((key) => ({
+  label: key,
+  values: [x.data.specs[key] ?? '—', y.data.specs[key] ?? '—'],
+}));
+
+const jsonLd = [
+  breadcrumbSchema(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: 'Compare', path: '/reviews/' },
+    { name: `${x.data.product} vs ${y.data.product}`, path: `/compare/${Astro.params.a}-vs-${Astro.params.b}/` },
+  ]),
+];
+
+---
+
+<Base
+  title={`${x.data.product} vs ${y.data.product}: Which Should You Buy?`}
+  description={`${x.data.product} vs ${y.data.product} — specs, scores and buying advice compared side by side.`}
+  path={`/compare/${Astro.params.a}-vs-${Astro.params.b}/`}
+  jsonLd={jsonLd}
+>
+  <Breadcrumbs
+    items={[
+      { name: 'Home', href: '/' },
+      { name: 'Reviews', href: '/reviews/' },
+      { name: `${x.data.product} vs ${y.data.product}` },
+    ]}
+  />
+
+  <div class="mx-auto max-w-4xl px-4 py-8">
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+      {x.data.product} vs {y.data.product}
+    </h1>
+
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      {
+        [x, y].map((r) => (
+          <div class="rounded-xl border border-slate-200 p-5">
+            <h2 class="text-lg font-semibold text-slate-900">{r.data.product}</h2>
+            <p class="mt-1 text-sm text-slate-500">
+              Our score: <strong class="text-slate-900">{r.data.rating.toFixed(1)}</strong>/5 · {r.data.sourceType === 'tested' ? 'Hands-on tested' : 'Research-based'}
+            </p>
+            <p class="mt-3 text-sm text-slate-600">{r.data.description}</p>
+            <div class="mt-3 flex flex-col gap-2">
+              <a href={`/reviews/${reviewSlug(r.id)}/`} class="text-sm font-medium text-blue-700 hover:underline">
+                Read full review →
+              </a>
+              <CtaButton href={r.data.affiliateUrl} priceUsd={r.data.priceUsd} priceCheckedAt={r.data.priceCheckedAt} itemName={r.data.product} />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    {
+      rows.length > 0 && (
+        <section class="mt-10">
+          <h2 class="text-2xl font-semibold text-slate-900">Spec comparison</h2>
+          <ComparisonTable
+            products={[
+              { name: x.data.product, href: `/reviews/${reviewSlug(x.id)}/` },
+              { name: y.data.product, href: `/reviews/${reviewSlug(y.id)}/` },
+            ]}
+            rows={rows}
+          />
+        </section>
+      )
+    }
+
+    <p class="mt-8 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800">
+      TODO: 上线前为每个对比页补充人工撰写的对比结论（150 词以上，说明各自适合谁），避免纯模板页。
+    </p>
+  </div>
+</Base>

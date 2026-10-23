@@ -1,0 +1,36 @@
+---
+interface Props {
+  href: string;
+  priceUsd?: number;
+  priceCheckedAt?: Date;
+  label?: string;
+  className?: string;
+  itemName?: string;
+}
+
+const { href, priceUsd, priceCheckedAt, label = 'Check price on Amazon', className = '', itemName } = Astro.props;
+---
+
+<div class:list={['not-prose', className]}>
+  <a
+    href={href}
+    rel="sponsored nofollow noopener"
+    target="_blank"
+    data-item-name={itemName}
+    class="inline-flex items-center gap-2 rounded-lg bg-amber-400 px-5 py-2.5 text-sm font-bold text-slate-900 transition hover:bg-amber-300"
+  >
+    {label}
+    <svg viewBox="0 0 20 20" class="h-4 w-4" fill="currentColor" aria-hidden="true">
+      <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+      <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+    </svg>
+  </a>
+  {
+    priceUsd !== undefined && (
+      <p class="mt-1.5 text-xs text-slate-500">
+        ${priceUsd.toFixed(2)}
+        {priceCheckedAt && ` · price as of ${priceCheckedAt.toISOString().slice(0, 10)}`} · price may change
+      </p>
+    )
+  }
+</div>

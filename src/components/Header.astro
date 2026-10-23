@@ -1,0 +1,40 @@
+---
+import { SITE_NAME, NAV } from '../consts';
+import Search from './Search.astro';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => href !== '/' && path.startsWith(href);
+---
+
+<header class="border-b border-slate-200 bg-white">
+  <div class="mx-auto max-w-6xl px-4">
+    <div class="flex flex-wrap items-center justify-between gap-3 py-3">
+      <a href="/" class="text-lg font-bold tracking-tight text-slate-900">{SITE_NAME}</a>
+      <nav class="hidden gap-6 text-sm font-medium text-slate-600 md:flex" aria-label="Main navigation">
+        {
+          NAV.map((n) => (
+            <a href={n.href} class:list={['hover:text-slate-900', isActive(n.href) && 'text-blue-700']}>
+              {n.label}
+            </a>
+          ))
+        }
+      </nav>
+      <div class="w-full max-w-[220px] md:w-auto">
+        <Search />
+      </div>
+    </div>
+
+    <nav
+      class="-mx-1 flex gap-5 overflow-x-auto px-1 pb-2 text-sm font-medium whitespace-nowrap text-slate-600 md:hidden"
+      aria-label="Mobile navigation"
+    >
+      {
+        NAV.map((n) => (
+          <a href={n.href} class:list={['py-1 hover:text-slate-900', isActive(n.href) && 'text-blue-700']}>
+            {n.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>

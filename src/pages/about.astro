@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_NAME } from '../consts';
+---
+
+<Base title="About us" description={`About ${SITE_NAME} and how we work.`} path="/about/">
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900">About us</h1>
+    <div class="content-body mt-6">
+      <p>
+        {SITE_NAME} is an independent review publication. We cover consumer and professional products with one rule:
+        every conclusion has to trace back to a source you can check.
+      </p>
+      <h2>Who writes here</h2>
+      <p>
+        Our reviews are researched and written by the editorial team under a stable byline. Where a product has been
+        physically tested by us, the page says so and shows the test data. Where a review is research-based, the page
+        says that too — we do not pretend to hands-on experience we do not have.
+      </p>
+      <h2>How we make money</h2>
+      <p>
+        We earn affiliate commissions when readers buy through our links, and we may run advertising. Neither influences
+        ratings, rankings or conclusions. See our <a href="/disclosure/">affiliate disclosure</a> for details.
+      </p>
+      <h2>Corrections</h2>
+      <p>
+        Found an error? <a href="/contact/">Tell us</a> — we correct pages promptly and note the update date on every
+        page.
+      </p>
+    </div>
+  </div>
+</Base>
