@@ -21,9 +21,12 @@
 ```bash
 npm install
 npm run dev        # 本地开发 http://localhost:4321
-npm run build      # 构建 + Pagefind 索引 → dist/
+npm run build      # 构建 + Pagefind 索引 + 质检脚本 → dist/
+npm run qa         # 单独跑构建后质检（需先 build）
 npm run preview    # 预览构建产物
 ```
+
+> `npm run build` 末尾会执行 `scripts/qa.mjs`：检查 JSON-LD 数量、Product schema、联盟披露、`rel="sponsored"`、canonical、H1 唯一性，以及"研究型内容不得出现 we tested"这类伪装实测表述。任一项不通过会中断构建——Cloudflare Pages 上同样生效，用于防止政策回归。
 
 ## 环境变量
 
@@ -43,6 +46,7 @@ npm run preview    # 预览构建产物
    - `amazonRating`：Amazon 参考评分（仅页面展示，**禁止**进入 schema）
    - `priceUsd` / `priceCheckedAt`：价格与抓取日期（页面标注"price as of"）
    - `sourceType`：`research`（无实物样品）或 `tested`（实测）
+   - `faqs`：`[{ q, a }]` 数组，渲染可见问答区块并输出 FAQPage JSON-LD（建议 4–6 条真实搜索问题）
    - `draft: true` 的条目不生成页面
 3. 正文按 4.3 模板：结论框 → 评估方法 → 数据 → 优缺点 → FAQ → 内链；
 4. 新品类必须在 `src/data/categoryMeta.ts` 补人工导语，否则横评页显示 TODO 告警；
@@ -50,7 +54,7 @@ npm run preview    # 预览构建产物
 
 ## 部署到 Cloudflare Pages
 
-1. 仓库推送到 GitHub；
+1. 仓库推送到 GitHub（本地已初始化 git 并有首次提交）；
 2. Cloudflare Dashboard → Workers & Pages → Create → Pages → Connect to Git；
 3. 构建配置：Framework preset 选 **Astro**；Build command `npm run build`；Build output directory `dist`；
 4. 环境变量加 `SITE_URL=https://你的域名`（及 GA4/beacon 变量）；
@@ -67,8 +71,9 @@ npm run preview    # 预览构建产物
 - [ ] `affiliateUrl` 中的 `YOUR-TAG-20` 换成真实 Amazon Associates tag
 - [ ] `src/pages/contact.astro`：真实联系邮箱
 - [ ] Cloudflare Pages 环境变量：`SITE_URL`
-- [ ] GA4：申请账号后设 `PUBLIC_GA4_ID`，并接入认证 CMP（CookieYes）替换 Consent Mode 占位
+- [ ] GA4：申请账号后设 `PUBLIC_GA4_ID`，在 GA4 后台把 `affiliate_click` 标记为**主要转化**并导入 Google Ads，接入认证 CMP（CookieYes）替换 Consent Mode 占位
 - [ ] `public/_redirects`：改版 301 规则
+- [ ] `src/data/categoryMeta.ts`：新增品类时补人工导语
 
 ## 已内置的 SEO / 合规项
 
@@ -76,10 +81,13 @@ npm run preview    # 预览构建产物
 - `sitemap-index.xml` 自动生成（`@astrojs/sitemap`）
 - JSON-LD：Product+Review+AggregateRating（仅本站评分）/ ItemList / BreadcrumbList / Article / FAQPage
 - `robots.txt` 动态生成并声明 sitemap
+- RSS：`/rss.xml`（构建时从测评集合生成）
 - `_headers`：安全响应头 + 静态资源 immutable 缓存
 - 联盟链接统一 `rel="sponsored nofollow noopener"` + FTC/Amazon 披露语句
+- GA4 转化事件：所有联盟外链点击触发 `affiliate_click`（含 `link_url` / `link_domain` / `item_name`），在 GA4 后台标记为主要转化后可导入 Google Ads
 - Google Consent Mode v2 默认拒绝（等 CMP 接入）
 - Pagefind 搜索结果页由客户端渲染，不进 sitemap
+- 构建后质检（`scripts/qa.mjs`）强制校验上述政策项
 
 ## 后续路线（方案书对应章节）
 
