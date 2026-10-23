@@ -54,7 +54,7 @@ npm run preview    # 预览构建产物
 
 ## 部署到 Cloudflare Pages
 
-1. 仓库推送到 GitHub（本地已初始化 git 并有首次提交）；
+1. 仓库已推送至 GitHub：`https://github.com/Q7748533/yh`（分支 `main`）；
 2. Cloudflare Dashboard → Workers & Pages → Create → Pages → Connect to Git；
 3. 构建配置：Framework preset 选 **Astro**；Build command `npm run build`；Build output directory `dist`；
 4. 环境变量加 `SITE_URL=https://你的域名`（及 GA4/beacon 变量）；
