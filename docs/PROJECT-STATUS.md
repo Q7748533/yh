@@ -20,7 +20,7 @@
 `8d64d4f` 脚手架 → `9ed50e9` GA4 事件 / FAQ schema / RSS / 质检脚本 → `7fc4fd4` `aa2d922` `6f0dc35` 仓库、wrangler、SITE_URL 与部署脚本
 
 ### 阶段 2：首篇内容与 SEO 审计（10-24 上午）
-`8a5254b` TOPDON ONE 测评 → `216a25d` 车主反馈章 → `d23e324` SEO 审计（AggregateRating / OG PNG / title / og:type / 搜索懒加载）→ `5214b0f` 规则固化为构建强制
+`8a5254b` TOPDON ONE 测评 → `216a25d` 买家反馈章 → `d23e324` SEO 审计（AggregateRating / OG PNG / title / og:type / 搜索懒加载）→ `5214b0f` 规则固化为构建强制
 
 ### 阶段 3：版式与首页（10-24 中午）
 `331d942` 版式 P0–P3（决策卡、目录、评分分解、FAQ 折叠、粘性条）→ `7a98494` `05d249d` 首页改版 + 补 `/best/` `/brands/`（原导航 404）→ `ee192d1` 图片体系 → `9648425` 反模板化护栏

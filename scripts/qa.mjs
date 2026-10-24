@@ -262,6 +262,32 @@ for (const page of reviewPages) {
   );
 }
 
+// 10) 品类术语污染：非汽车品类不得出现汽配术语
+// （2026-10-24 事故：把美发产品的买家写成"车主"，因为整段模板从汽配那篇复制而来）
+function categoryOf(slug) {
+  const file = join('src', 'content', 'reviews', `${slug}.mdx`);
+  if (!existsSync(file)) return null;
+  const m = readFileSync(file, 'utf8').match(/^category:\s*"([^"]+)"/m);
+  return m ? m[1] : null;
+}
+
+const AUTOMOTIVE_TERMS = [/车主/, /车辆/, /汽车/, /\bOBD\b/i, /\bJ2534\b/i, /\bECU\b/i, /\bscan tool\b/i];
+
+for (const page of reviewPages) {
+  const slug = page.replace(/\\/g, '/').split('/')[2];
+  const cat = categoryOf(slug);
+  if (!cat || cat === 'automotive-diagnostics') continue;
+  const body = extractBody(readHtml(page));
+  const ledgerFile = join(CLAIMS_DIR, `${slug}.md`);
+  const ledger = existsSync(ledgerFile) ? readFileSync(ledgerFile, 'utf8') : '';
+  for (const re of AUTOMOTIVE_TERMS) {
+    const inBody = body.match(re);
+    check(!inBody, `${slug}: 正文出现汽配术语「${inBody ? inBody[0] : ''}」，与品类 ${cat} 不符`);
+    const inLedger = ledger.match(re);
+    check(!inLedger, `${slug}: 台账出现汽配术语「${inLedger ? inLedger[0] : ''}」，与品类 ${cat} 不符`);
+  }
+}
+
 console.log(`\nQA: 检查 ${reviewPages.length} 个测评页`);
 for (const n of notes) console.log(`  ! ${n}`);
 

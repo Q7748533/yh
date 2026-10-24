@@ -32,7 +32,7 @@
 
 | 选题 | 依据与做法 |
 |---|---|
-| `topdon one problems` | 论坛主导（forum 4 / video 2），意图是排查而非购买。做法：官方公告 + 论坛高频问题汇总，标注"基于车主反馈"，不引原文 |
+| `topdon one problems` | 论坛主导（forum 4 / video 2），意图是排查而非购买。做法：官方公告 + 论坛高频问题汇总，标注"基于买家反馈"，不引原文 |
 | `topdon one worth it` | forum 5，纯决策意图。做法：决策框架 + 成本测算，比"优缺点罗列"更有用 |
 | `topdon one for ford` | 混合场，品牌站占首。做法：福特/FCA 的 SGW、AutoAuth 门槛讲清楚 |
 

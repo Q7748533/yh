@@ -6,7 +6,7 @@
 - **L** = Amazon listing 原文（用户提供）
 - **P** = 厂商官方产品图（topdon.com）
 - **S** = Google Shopping 快照
-- **R** = listing 车主评论（仅归纳）
+- **R** = listing 买家评论（仅归纳）
 - **C** = 自有测算（写明算式）
 
 | 正文表述 | 值 | 来源 | 备注 |
