@@ -45,7 +45,15 @@ for (const page of reviewPages) {
 
   check(ldCount >= 3, `${name}: JSON-LD 少于 3 段（实际 ${ldCount}）`);
   check(html.includes('"@type":"Product"'), `${name}: 缺少 Product 结构化数据`);
-  check(html.includes('As an Amazon Associate'), `${name}: 缺少 Amazon 联盟披露语句`);
+  // 披露：决策卡内的近 CTA 披露 + 页脚的联盟声明，两者都要有
+  check(
+    /we may earn a commission/i.test(html),
+    `${name}: 决策卡附近缺少联盟披露（应为 "we may earn a commission"）`
+  );
+  check(
+    /earn commissions on qualifying purchases/i.test(html),
+    `${name}: 页脚缺少联盟关系声明`
+  );
   check(html.includes('rel="sponsored nofollow noopener"'), `${name}: 联盟链接缺少 sponsored nofollow 属性`);
   check(html.includes('rel="canonical"'), `${name}: 缺少 canonical`);
 
@@ -329,6 +337,29 @@ for (const page of reviewPages) {
     );
   }
   check(!/YOUR-TAG-20/.test(readHtml(page)), `${slug}: 仍含占位推广 tag YOUR-TAG-20`);
+}
+
+// 13) 联盟链接必须带 rel="sponsored"/"nofollow"（Google 链接垃圾政策要求）
+const affiliateHosts = [
+  ...affiliateSrc.matchAll(/url:\s*'https?:\/\/([^/'"]+)/g),
+].map((m) => m[1]);
+if (affiliateHosts.length) {
+  const hostPattern = new RegExp(`https://(?:${affiliateHosts.map((h) => h.replace(/\./g, '\\.')).join('|')})`);
+  let affiliateLinks = 0;
+  for (const file of walkHtml(DIST)) {
+    const html = readHtml(file);
+    for (const m of html.matchAll(/<a\b[^>]*href="(https:\/\/[^"]+)"[^>]*>/g)) {
+      if (!hostPattern.test(m[1])) continue;
+      affiliateLinks++;
+      const rel = m[0].match(/rel="([^"]*)"/)?.[1] ?? '';
+      check(
+        /sponsored|nofollow/.test(rel),
+        `${file.replace(/\\/g, '/')}: 联盟链接缺少 rel="sponsored"（当前 rel="${rel}"）`
+      );
+    }
+  }
+  check(affiliateLinks > 0, '全站没有渲染出任何联盟链接，检查 affiliate.ts 与 CTA 组件');
+  console.log(`  · 联盟链接 ${affiliateLinks} 个，rel 全部合规`);
 }
 
 console.log(`\nQA: 检查 ${reviewPages.length} 个测评页`);
