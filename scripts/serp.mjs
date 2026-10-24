@@ -10,26 +10,55 @@ if (!KEY) {
   process.exit(1);
 }
 
-const KEYWORDS = [
-  { group: 'A 品牌核心', q: 'topdon one review' },
-  { group: 'A 品牌核心', q: 'topdon one scan tool' },
-  { group: 'A 品牌核心', q: 'topdon one diagnostic tablet' },
-  { group: 'A 品牌核心', q: 'topdon one problems' },
-  { group: 'A 品牌核心', q: 'topdon one subscription cost' },
-  { group: 'B 对比', q: 'topdon one vs autel' },
-  { group: 'B 对比', q: 'topdon one vs launch x431' },
-  { group: 'B 对比', q: 'topdon one vs phoenix plus' },
-  { group: 'B 对比', q: 'autel mk808 vs topdon' },
-  { group: 'C 品类', q: 'best bidirectional scan tool' },
-  { group: 'C 品类', q: 'best diagnostic scan tool for mechanics' },
-  { group: 'C 品类', q: 'best scan tool for small shop' },
-  { group: 'C 品类', q: 'j2534 pass thru scan tool' },
-  { group: 'C 品类', q: 'best obd2 scanner with ecu coding' },
-  { group: 'D 长尾', q: 'topdon one for ford' },
-  { group: 'D 长尾', q: 'topdon one worth it' },
-  { group: 'D 长尾', q: 'bidirectional scan tool under 1000' },
-  { group: 'D 长尾', q: 'topdon one vs autel mk808' },
-];
+const KEYWORD_SETS = {
+  default: [
+    { group: 'A 品牌核心', q: 'topdon one review' },
+    { group: 'A 品牌核心', q: 'topdon one scan tool' },
+    { group: 'A 品牌核心', q: 'topdon one diagnostic tablet' },
+    { group: 'A 品牌核心', q: 'topdon one problems' },
+    { group: 'A 品牌核心', q: 'topdon one subscription cost' },
+    { group: 'B 对比', q: 'topdon one vs autel' },
+    { group: 'B 对比', q: 'topdon one vs launch x431' },
+    { group: 'B 对比', q: 'topdon one vs phoenix plus' },
+    { group: 'B 对比', q: 'autel mk808 vs topdon' },
+    { group: 'C 品类', q: 'best bidirectional scan tool' },
+    { group: 'C 品类', q: 'best diagnostic scan tool for mechanics' },
+    { group: 'C 品类', q: 'best scan tool for small shop' },
+    { group: 'C 品类', q: 'j2534 pass thru scan tool' },
+    { group: 'C 品类', q: 'best obd2 scanner with ecu coding' },
+    { group: 'D 长尾', q: 'topdon one for ford' },
+    { group: 'D 长尾', q: 'topdon one worth it' },
+    { group: 'D 长尾', q: 'bidirectional scan tool under 1000' },
+    { group: 'D 长尾', q: 'topdon one vs autel mk808' },
+  ],
+  // 跨品类横向对比：三个品类各 5 个同构查询（头部/人群/价格/单品测评/值不值）
+  categories: [
+    { group: '汽车诊断', q: 'best bidirectional scan tool' },
+    { group: '汽车诊断', q: 'best diagnostic scan tool for mechanics' },
+    { group: '汽车诊断', q: 'best scan tool under 500' },
+    { group: '汽车诊断', q: 'topdon one review' },
+    { group: '汽车诊断', q: 'topdon one worth it' },
+    { group: '美发工具', q: 'best hair dryer' },
+    { group: '美发工具', q: 'best hair dryer for fine hair' },
+    { group: '美发工具', q: 'best hair dryer under 200' },
+    { group: '美发工具', q: 'dyson supersonic review' },
+    { group: '美发工具', q: 'dyson supersonic worth it' },
+    { group: '咖啡机', q: 'best espresso machine' },
+    { group: '咖啡机', q: 'best espresso machine for home' },
+    { group: '咖啡机', q: 'best espresso machine under 1000' },
+    { group: '咖啡机', q: 'breville barista express review' },
+    { group: '咖啡机', q: 'breville barista express worth it' },
+  ],
+};
+
+const setArg = process.argv.indexOf('--set');
+const setName = setArg > -1 ? process.argv[setArg + 1] : 'default';
+const KEYWORDS = KEYWORD_SETS[setName];
+if (!KEYWORDS) {
+  console.error(`未知关键词集：${setName}（可用：${Object.keys(KEYWORD_SETS).join(', ')}）`);
+  process.exit(1);
+}
+const OUT_FILE = setName === 'default' ? 'docs/serp-report.md' : `docs/serp-${setName}.md`;
 
 const RULES = [
   { name: 'video', test: (h) => /youtube\.com|youtu\.be|vimeo\.com/.test(h) },
@@ -139,7 +168,7 @@ for (const r of [...results].sort((a, b) => order.indexOf(a.verdict) - order.ind
 }
 
 md += `\n## 分类明细\n\n`;
-for (const group of ['A 品牌核心', 'B 对比', 'C 品类', 'D 长尾']) {
+for (const group of [...new Set(results.map((r) => r.group))]) {
   md += `### ${group}\n\n`;
   for (const r of results.filter((x) => x.group === group)) {
     md += `**${r.q}** — ${icon[r.verdict]} ${r.verdict}\n\n`;
@@ -159,5 +188,5 @@ const tally = results.reduce((acc, r) => {
 md += `## 结论\n\n`;
 for (const k of order) if (tally[k]) md += `- ${icon[k]} **${k}**：${tally[k]} 个关键词\n`;
 
-writeFileSync('docs/serp-report.md', md);
-console.log(`\n报告已写入 docs/serp-report.md（${results.length} 个关键词）`);
+writeFileSync(OUT_FILE, md);
+console.log(`\n报告已写入 ${OUT_FILE}（${results.length} 个关键词）`);
