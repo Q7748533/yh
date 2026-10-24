@@ -63,13 +63,23 @@
 - [ ] 结论来源已标注（`research` / `tested`），无伪装实测（"we tested" 表述）
 - [ ] Amazon 评论仅作线索：不引原句、不成段改写、不署名、不用图；归纳须与规格表或第二信源交叉验证
 
-## 六、发布后
+## 六、技术层
+
+- [ ] `sitemap-index.xml` 自动生成且包含新页
+- [ ] `robots.txt` 声明 sitemap
+- [ ] **站内链接全部可达**（QA 已加死链检查：导航/页脚/正文内链逐条比对 dist 文件——曾出现导航 "Best of" 指向不存在的 `/best/`）
+- [ ] 404 返回 404 状态码
+- [ ] 首屏无第三方阻塞脚本（Pagefind 已改点击后懒加载）
+- [ ] 图片有 alt，或 SVG 有 `<title>` + figcaption
+- [ ] 移动端可读（导航在 768px 以下独立横滑）
+
+## 七、发布后
 
 - [ ] GSC 提交 `sitemap-index.xml`，检查索引状态
 - [ ] Rich Results Test 验证 Product / Article / Breadcrumb
 - [ ] 记录 URL 到季度审计表（90 天无曝光 → 合并 / 改写 / noindex）
 
-## 七、当前已知差距（待补）
+## 八、当前已知差距（待补）
 
 1. **Product schema 缺 `image`** —— 没有产品图（不能用 Amazon 图），富媒体可能不显示缩略图。解法：自制"评分卡片图"（同时满足自制图片要求）。
 2. **内联 SVG 图表不进 Google Images** —— 后续在构建期用 sharp 转 PNG 并配 `alt`。
