@@ -371,6 +371,17 @@ if (affiliateHosts.length) {
   console.log(`  · 联盟链接 ${affiliateLinks} 个，rel 全部合规`);
 }
 
+// 14) IndexNow key 文件：必须在 public/ 下且内容与文件名一致
+const keyFile = existsSync('public')
+  ? readdirSync('public').find((f) => /^[a-f0-9]{32}\.txt$/.test(f))
+  : undefined;
+check(Boolean(keyFile), '缺少 IndexNow key 文件（public/<32 位十六进制>.txt）');
+if (keyFile) {
+  const body = readFileSync(join('public', keyFile), 'utf8').trim();
+  check(body === keyFile.replace(/\.txt$/, ''), `IndexNow key 文件内容与文件名不一致：${keyFile}`);
+  check(existsSync(join(DIST, keyFile)), `IndexNow key 文件没有进构建产物：dist/${keyFile}`);
+}
+
 console.log(`\nQA: 检查 ${reviewPages.length} 个测评页`);
 for (const n of notes) console.log(`  ! ${n}`);
 

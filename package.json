@@ -10,10 +10,11 @@
     "qa": "node scripts/qa.mjs",
     "og": "node scripts/og-image.mjs",
     "serp": "node --env-file=.env scripts/serp.mjs",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name=yh --branch=main --commit-dirty=true",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=yh --branch=main --commit-dirty=true && npm run indexnow",
     "preview": "astro preview",
     "astro": "astro",
-    "price": "node --env-file=.env scripts/price.mjs"
+    "price": "node --env-file=.env scripts/price.mjs",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.14",
