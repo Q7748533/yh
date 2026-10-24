@@ -1,5 +1,5 @@
 export function absoluteUrl(site: URL | undefined, path: string): string {
-  const base = site ?? new URL('https://example.com');
+  const base = site ?? new URL('https://thepriceaudit.com');
   return new URL(path, base).href;
 }
 

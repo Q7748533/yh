@@ -4,7 +4,7 @@ import { reviewSlug } from '../utils/seo';
 import { SITE_NAME, SITE_DESCRIPTION } from '../consts';
 
 export const GET: APIRoute = async ({ site }) => {
-  const base = site ?? new URL('https://example.com');
+  const base = site ?? new URL('https://thepriceaudit.com');
   const reviews = (await getCollection('reviews', (r) => !r.data.draft)).sort(
     (a, b) => b.data.updatedAt.getTime() - a.data.updatedAt.getTime()
   );
