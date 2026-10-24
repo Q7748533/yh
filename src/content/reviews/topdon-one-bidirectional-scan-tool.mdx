@@ -63,6 +63,10 @@ faqs:
     a: "The renewal is $299 per year, and one year is included with the purchase. TopDon is also running a promotion for purchases activated between October 20 and December 20, 2026 that adds a second year at no cost. Note that the listing's \"$0.65 per day\" comparison works out to roughly $237 per year, which does not match the $299 renewal price."
   - q: "What does J2534 pass-thru actually let me do?"
     a: "It lets the tablet act as a gateway between a PC and the vehicle network so manufacturer software can perform module programming and replacement. It does not include the manufacturer software itself — you still need the relevant OEM subscription or token, and TopDon routes the workflow through its RLink platform."
+  - q: "Is it worth buying if I never plan to renew?"
+    a: "That depends on the vehicles you see. If your work stays inside the model years already covered at purchase, the tool keeps doing full-system diagnostics and bidirectional tests without renewing, and the $839 is your only cost. If you regularly work on 2020-and-newer vehicles, plan on renewing: new model years released after your coverage ends are not added, and the hardware warranty is tied to an active subscription."
+  - q: "What happens to the warranty if the subscription lapses?"
+    a: "TopDon's listing ties hardware warranty coverage to an active subscription, which is unusual — most tool makers warrant hardware independently of the software plan. Core diagnostics keep working after a lapse, but you lose both new vehicle data and warranty coverage. Confirm the current terms with TopDon before purchase, since this is the kind of clause that changes between regions."
   - q: "Will it handle Ford, Chrysler or Nissan vehicles?"
     a: "TopDon lists SGW access for FCA AutoAuth, Nissan AutoAuth and VAG SFD, which is what those vehicles require for advanced functions. Coverage still varies by model year and module, so verify your exact vehicles against the current coverage list before buying — the listing's \"universal fit\" label refers to the OBD-II connector, not to guaranteed function coverage."
   - q: "How does it compare with Autel or Launch at a similar price?"
@@ -109,11 +113,13 @@ More than 50 functions, with ADAS calibration, DPF regeneration, TPMS reset, ABS
 
 The published coverage table starts at 2013-and-newer BMW, 2016-and-newer Volkswagen and Volvo, 2017-and-newer Jaguar, 2018-and-newer Mercedes-Benz, and 2020-and-newer GM and Chrysler for advanced-protocol systems. Older vehicles remain diagnosable over standard protocols, but the headline capabilities are aimed at modern networks.
 
-## Subscription and true cost of ownership
+## What the subscription actually costs you
 
-This is where the value calculation gets interesting.
+This is the part of the listing that deserves a calculator, and the part most reviews skip.
 
-One year of software updates is included. TopDon is currently adding a second year for units activated between 20 October and 20 December 2026, described as a $299 value. After that, renewal is $299 per year.
+One year of software updates is included in the $839. TopDon is currently adding a second year for units activated between 20 October and 20 December 2026, which the listing values at $299. After that, renewal is $299 a year.
+
+In monthly terms that is about $24.90, or $0.82 a day. Against the purchase price, each renewal is roughly 36% of what the hardware cost.
 
 <SpecChart
   caption="Cost of ownership at the $839 purchase price and $299 annual renewal, assuming the 2026 bonus-year promotion is claimed"
@@ -124,7 +130,7 @@ One year of software updates is included. TopDon is currently adding a second ye
   ]}
 />
 
-Three years of coverage with the promotion comes to about $1,138; five years about $1,736. Compare that with the sticker price and the subscription is a meaningful share of ownership cost — roughly a third of the hardware price every year after the included period.
+Three years of coverage with the promotion comes to about $1,138; five years about $1,736.
 
 <SpecChart
   caption="Five-year spend split, assuming the 2026 bonus year is claimed: $839 hardware against $897 in renewals"
@@ -136,17 +142,43 @@ Three years of coverage with the promotion comes to about $1,138; five years abo
 
 Across five years the software line slightly exceeds the hardware price: 52% of total spend is subscription, not the tool.
 
-Two details deserve attention before purchase. First, the hardware warranty is tied to an active subscription, which is unusual: most tool makers warrant hardware independently of software plans. Second, without a subscription the tool keeps working on the vehicles already in its database, but new model years released later will not be covered. For a shop working on late-model cars, that is a functional limit, not a cosmetic one.
+### Three ways to own it
+
+| Approach | Five-year spend | What you get | What you give up |
+|---|---|---|---|
+| Renew every year | $1,736 | Continuous coverage, warranty stays active | — |
+| Renew every other year | $1,437 | Coverage in alternate years | New model years during the gaps, warranty continuity |
+| Never renew | $839 | The tool as shipped in 2026 | Model years released after coverage ends, warranty coverage |
+
+Figures assume the 2026 bonus year is claimed; without it, add $299 to each row.
+
+### What actually stops when it lapses
+
+TopDon's wording is more specific than "you lose updates", and the three parts matter differently:
+
+- **Core diagnostics and bidirectional control keep working.** The tool does not brick.
+- **New vehicle data stops.** Model years released after your coverage ends are not added to the database.
+- **Hardware warranty coverage stops.** This is the unusual part: the warranty is tied to an active subscription, where most tool makers warrant the hardware independently of the software plan.
+
+For a shop working on late-model cars, the second point is a functional limit rather than a cosmetic one. The 2027 model that rolls in next year is exactly the kind of vehicle a subscription exists to cover.
+
+### The daily-cost arithmetic does not add up
+
+The listing frames the subscription as "$0.65/day." At $299 a year the real figure is about $0.82 a day; $0.65 a day works out to roughly $237 a year. The comparison to a repair-manual subscription is fair in spirit — the arithmetic is not.
+
+### Three things to check before you buy
+
+1. **Your model years are on the coverage list.** The listing's protocol table starts at 2013+ BMW, 2016+ Volkswagen and Volvo, 2018+ Mercedes-Benz, and 2020+ GM and Chrysler for advanced-protocol systems.
+2. **What the warranty status is if you skip a year.** Ask before you buy, not after.
+3. **OEM programming costs sit outside this number.** J2534 is the pipe; manufacturer software and tokens are separate purchases.
 
 ## Where the marketing outruns the datasheet
 
-Three claims in the listing are worth reading twice.
-
-**The daily-cost framing.** The listing presents the subscription as "$0.65/day." At $299 per year, the real figure is about $0.82 per day, or roughly $237 per year if the $0.65 figure were accurate. The comparison to a repair-manual subscription is fair in spirit; the arithmetic is not.
+Two claims in the listing are worth reading twice.
 
 **"Universal fit."** That label refers to the OBD-II connector, which fits everything with a 16-pin port. Function coverage is a different question entirely, and the listing's own protocol table shows model-year floors by brand. Check your vehicles against the current coverage list.
 
-**"No subscription?"** Core diagnostics and bidirectional control do stay active. But the combination of frozen coverage and subscription-linked warranty means the practical answer for a working shop is that you will renew.
+**"Dealer-level."** The hardware is genuinely dealer-adjacent — topology mapping and coding routines that mirror factory tools. But dealer-level *capability* in practice requires the manufacturer's software subscription or token on top of the tablet. The ONE is the interface, not the licence.
 
 One more spec worth noting: Android 12 on a device launched in 2026. It is a stable, well-supported release, but it is also two major versions behind current Android, and diagnostic tablets tend to be kept for five years or more.
 
