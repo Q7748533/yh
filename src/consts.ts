@@ -20,3 +20,7 @@ export const SITE_EMAIL = 'hello@thepriceaudit.com';
 export const SITE_LEGAL_NAME = ''; // 可选：公司主体名称
 export const SITE_COUNTRY = ''; // 可选：注册地/运营地，如 "Hong Kong, China"
 export const POLICY_UPDATED = '2026-10-24';
+
+// Google Analytics 4 衡量 ID（公开信息，会出现在页面源码里）
+// 可用 PUBLIC_GA4_ID 环境变量覆盖；留空则完全不加载 GA 脚本
+export const GA_MEASUREMENT_ID = import.meta.env.PUBLIC_GA4_ID || 'G-0NGKMQCZNZ';

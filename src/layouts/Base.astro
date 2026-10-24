@@ -2,7 +2,9 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION } from '../consts';
+import ConsentBar from '../components/ConsentBar.astro';
+import ConsentBar from '../components/ConsentBar.astro';
+import { SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION, GA_MEASUREMENT_ID } from '../consts';
 import { absoluteUrl, truncate } from '../utils/seo';
 
 interface Props {
@@ -34,7 +36,7 @@ const fullTitle = title
     : withSite
   : `${SITE_NAME} — ${SITE_TAGLINE}`;
 const ogImg = ogImage ? absoluteUrl(Astro.site, ogImage) : absoluteUrl(Astro.site, '/og-default.png');
-const gaId = import.meta.env.PUBLIC_GA4_ID;
+const gaId = GA_MEASUREMENT_ID;
 const cfToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
 ---
 
@@ -128,5 +130,7 @@ const cfToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
         true
       );
     </script>
+    {gaId && <ConsentBar />}
+    {gaId && <ConsentBar />}
   </body>
 </html>
