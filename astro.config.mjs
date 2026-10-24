@@ -2,10 +2,13 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import { isCategoryIndexable, isBrandIndexable } from './src/utils/indexability.mjs';
+import { isCategoryIndexable, isBrandIndexable, reviewLastmods } from './src/utils/indexability.mjs';
 
 // Canonical site URL: 默认生产域名；绑自定义域名后用 SITE_URL 环境变量覆盖
 const site = process.env.SITE_URL || 'https://thepriceaudit.com';
+
+// 只有真实已知的更新日期才写 lastmod；静态页不编造日期
+const lastmods = reviewLastmods();
 
 export default defineConfig({
   site,
@@ -20,6 +23,11 @@ export default defineConfig({
         const brandPage = page.match(/\/brands\/([^/]+)\/$/);
         if (brandPage) return isBrandIndexable(brandPage[1]);
         return true;
+      },
+      serialize: (item) => {
+        const m = item.url.match(/\/reviews\/([^/]+)\/$/);
+        if (m && lastmods[m[1]]) return { ...item, lastmod: lastmods[m[1]] };
+        return item;
       },
     }),
   ],

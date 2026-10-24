@@ -34,6 +34,30 @@ export function reviewMeta() {
   return rows;
 }
 
+/**
+ * 测评 slug → updatedAt（YYYY-MM-DD）
+ * 用于给 sitemap 填 lastmod：这是 Google 唯一会参考的字段，
+ * 但只有当它真实时才有效——所以只对有明确更新日期的测评页填。
+ */
+export function reviewLastmods() {
+  const out = {};
+  let files = [];
+  try {
+    files = readdirSync(REVIEWS_DIR).filter((f) => f.endsWith('.mdx'));
+  } catch {
+    return out;
+  }
+  for (const file of files) {
+    const src = readFileSync(join(REVIEWS_DIR, file), 'utf8');
+    if (/^draft:\s*true/m.test(src)) continue;
+    const updated = src.match(/^updatedAt:\s*(\d{4}-\d{2}-\d{2})/m)?.[1];
+    if (!updated) continue;
+    const slug = file.replace(/\.mdx$/, '');
+    out[slug] = updated;
+  }
+  return out;
+}
+
 /** 每个品类的篇数与品牌数 */
 export function categoryStats() {
   const stats = {};
