@@ -40,6 +40,8 @@ npm run preview    # 预览构建产物
 
 ## 内容工作流（AI 起草 + 人工复核）
 
+> **强制标准：`docs/seo-checklist.md`**（2026-10-24 审计后确立，可机器校验的项已写入 `scripts/qa.mjs`，不达标构建即失败）。起稿从 `docs/article-template.mdx` 复制。
+
 1. 在 `src/content/reviews/` 新建 `.mdx` 文件，文件名即 URL slug；
 2. frontmatter 按 `src/content.config.ts` 的 schema 填写——**所有数字（规格/价格/评分）必须来自投喂源，禁止编造**：
    - `rating`：本站评分（进入 Review/AggregateRating schema）

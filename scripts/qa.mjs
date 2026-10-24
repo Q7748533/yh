@@ -55,7 +55,40 @@ for (const page of reviewPages) {
   check(h1Count === 1, `${name}: H1 数量为 ${h1Count}（应为 1）`);
 }
 
-// 3) 全站 canonical 域名检查（SITE_URL 未设置时会暴露）
+// 3) 每篇测评页的 SEO 硬性标准（2026-10-24 审计后确立，违反即构建失败）
+for (const page of reviewPages) {
+  const html = readHtml(page);
+  const name = page.replace(/\\/g, '/');
+
+  const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
+  check(title.length > 0 && title.length <= 65, `${name}: title 长度 ${title.length}（上限 65，建议 ≤60）`);
+
+  const desc = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
+  check(desc.length >= 100 && desc.length <= 160, `${name}: meta description 长度 ${desc.length}（应为 100–160）`);
+
+  check(
+    /property="og:image" content="[^"]*\.(png|jpe?g|webp)"/.test(html),
+    `${name}: og:image 必须是 PNG/JPG/WEBP（SVG 社交平台不渲染）`
+  );
+  check(html.includes('property="og:type" content="article"'), `${name}: og:type 应为 article`);
+  check(
+    !html.includes('AggregateRating'),
+    `${name}: 出现 AggregateRating —— 单条编辑评分不得冒充聚合评分（Google 政策）`
+  );
+  check(
+    !/<script[^>]+src="\/pagefind/.test(html) && !/rel="stylesheet"[^>]+href="\/pagefind/.test(html),
+    `${name}: Pagefind 资源被首屏预加载（应点击后懒加载）`
+  );
+
+  const canonicalCount = (html.match(/rel="canonical"/g) || []).length;
+  check(canonicalCount === 1, `${name}: canonical 数量为 ${canonicalCount}（应为 1）`);
+
+  check(/<html lang="en"/.test(html), `${name}: 缺少 html lang 属性`);
+  check(/<figure[\s>]/.test(html), `${name}: 缺少自制图表/图片（figure 元素）`);
+  check(html.includes('Our score'), `${name}: 缺少本站评分展示区`);
+}
+
+// 4) 全站 canonical 域名检查（SITE_URL 未设置时会暴露）
 const homeHtml = readHtml(join(DIST, 'index.html'));
 if (homeHtml.includes('https://example.com')) {
   notes.push('警告：canonical 仍为占位域名 https://example.com —— 部署前设置 SITE_URL 环境变量');

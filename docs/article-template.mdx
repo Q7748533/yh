@@ -1,0 +1,102 @@
+---
+# 复制本文件到 src/content/reviews/<slug>.mdx 后填写
+# 标准见 docs/seo-checklist.md —— 构建质检会拦截不合规内容
+
+# 标题：≤60 字符，含目标关键词与年份；超长时站点会自动去掉站名后缀
+title: "产品名 Review: 一句话说明品类 (2026)"
+# 描述：100–160 字符，写具体利益点（价格、核心能力、隐藏成本）
+description: ""
+brand: "品牌名"
+category: "品类 slug（与 src/data/categoryMeta.ts 保持一致）"
+product: "产品名（用于卡片、对比表、schema）"
+
+# 本站评分 0–5，一位小数，按 /methodology 公布的 rubric 打分
+rating: 4.0
+priceUsd: 0
+priceCheckedAt: 2026-01-01
+# 联盟链接：rel=sponsored 已由组件处理，这里只填带 tag 的 URL
+affiliateUrl: "https://www.amazon.com/dp/ASIN?tag=YOUR-TAG-20"
+amazonAsin: ""
+# Amazon 参考评分：只展示，绝不进 schema
+amazonRating: 0
+amazonReviewCount: 0
+
+# research = 基于公开资料研究（无实物）；tested = 实测。写错会被 QA 拦截
+sourceType: "research"
+
+# 优点 2–5 条、缺点 1–4 条：必须来自规格表或交叉验证后的结论，不抄官方文案
+pros:
+  - ""
+cons:
+  - ""
+
+# 规格表：官方可查项，逐条对应来源
+specs:
+  Screen: ""
+
+author: "Editorial Team"
+# 结论：3–5 句，说清"适合谁 / 不适合谁 / 最大隐性成本"
+verdict: ""
+
+# FAQ 4–6 条：来自真实搜索意图，答案要能独立成立（AI 搜索会直接引用）
+faqs:
+  - q: ""
+    a: ""
+
+updatedAt: 2026-01-01
+# draft: true 的条目不生成页面
+draft: true
+---
+
+import SpecChart from '../../components/SpecChart.astro';
+
+## TL;DR
+
+三句话：是什么、多少钱、最大的坑是什么。
+
+## How we evaluated this
+
+说明信息来源与边界（是否实测）。未实测必须写明，不得暗示上手经验。
+
+## What [产品] is
+
+形态、核心配置、包装清单。
+
+## Capability breakdown
+
+### 核心能力 1
+
+### 核心能力 2
+
+### 覆盖范围 / 限制
+
+## Subscription and true cost of ownership
+
+把订阅、耗材、必要配件算进 3 年 / 5 年成本，用图表呈现。
+
+<SpecChart
+  caption="说明假设条件（价格抓取日、促销是否计入）"
+  items={[
+    { label: "Hardware only", value: 0, unit: "$" },
+    { label: "3-year total", value: 0, unit: "$" },
+    { label: "5-year total", value: 0, unit: "$" },
+  ]}
+/>
+
+## Where the marketing outruns the datasheet
+
+逐条核对官方话术与数据是否一致（算术、口径、适用条件）。这是文章的差异化来源。
+
+## What owner feedback adds
+
+基于车主反馈归纳的高频问题（**不引用原文、不署名、不成段改写**），并说明哪些需要首周自测。
+
+## How it compares
+
+同价位/同定位替代品，说清各自的取舍，不贬低竞品。
+
+## Who should buy it
+
+适合谁 / 不适合谁，给替代方案。
+
+<!-- 发文前对照 docs/seo-checklist.md 过一遍；npm run build 会自动拦截硬性项 -->
