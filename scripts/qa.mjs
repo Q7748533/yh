@@ -390,6 +390,27 @@ if (existsSync(robotsFile)) {
   check(/Sitemap: https:\/\//.test(robots), 'robots.txt 缺少绝对地址的 Sitemap 声明');
 }
 
+// 16) 所有 <img> 必须有 alt="..."（Astro 会把 alt="" 渲染成裸 alt，Bing 判定为缺失）
+{
+  let images = 0;
+  let badAlt = 0;
+  for (const file of walkHtml(DIST)) {
+    const html = readHtml(file);
+    for (const m of html.matchAll(/<img\b[^>]*>/g)) {
+      images++;
+      if (!/\salt="[^"]*"/.test(m[0])) {
+        badAlt++;
+        if (badAlt <= 3) {
+          const rel = file.replace(/\\/g, '/').replace(`${DIST}/`, '');
+          console.log(`  ✗ ${rel}: <img> 缺少合法的 alt 属性`);
+        }
+      }
+    }
+  }
+  check(badAlt === 0, `${badAlt}/${images} 个 <img> 缺少合法的 alt="..." 属性`);
+  if (images) console.log(`  · 图片 ${images} 个，alt 全部合法`);
+}
+
 console.log(`\nQA: 检查 ${reviewPages.length} 个测评页`);
 for (const n of notes) console.log(`  ! ${n}`);
 

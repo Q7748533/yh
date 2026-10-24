@@ -11,9 +11,13 @@ interface Props {
   priceUsd?: number;
   sourceType: 'tested' | 'research';
   image?: ImageMetadata;
+  imageAlt?: string;
 }
 
-const { href, brand, title, description, rating, priceUsd, sourceType, image } = Astro.props;
+const { href, brand, title, description, rating, priceUsd, sourceType, image, imageAlt } = Astro.props;
+
+// alt 不能留空：Astro 会把 alt="" 渲染成没有值的裸 alt，Bing 判定为缺失
+const alt = imageAlt ?? `${title} product image`;
 ---
 
 <a
@@ -23,7 +27,7 @@ const { href, brand, title, description, rating, priceUsd, sourceType, image } =
   {
     image && (
       <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-slate-50">
-        <Image src={image} alt="" widths={[80, 160]} sizes="80px" class="h-full w-full object-contain p-1.5" loading="lazy" />
+        <Image src={image} alt={alt} widths={[80, 160]} sizes="80px" class="h-full w-full object-contain p-1.5" loading="lazy" />
       </div>
     )
   }
