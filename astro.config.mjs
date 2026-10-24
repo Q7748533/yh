@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // Canonical site URL: 默认生产域名；绑自定义域名后用 SITE_URL 环境变量覆盖
-const site = process.env.SITE_URL || 'https://yh-4pn.pages.dev';
+const site = process.env.SITE_URL || 'https://thepriceaudit.com';
 
 export default defineConfig({
   site,
