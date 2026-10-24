@@ -78,6 +78,7 @@ draft: false
 ---
 
 import SpecChart from '../../components/SpecChart.astro';
+import ScenarioTable from '../../components/ScenarioTable.astro';
 
 ## How we evaluated this
 
@@ -144,13 +145,29 @@ Across five years the software line slightly exceeds the hardware price: 52% of 
 
 ### Three ways to own it
 
-| Approach | Five-year spend | What you get | What you give up |
-|---|---|---|---|
-| Renew every year | $1,736 | Continuous coverage, warranty stays active | — |
-| Renew every other year | $1,437 | Coverage in alternate years | New model years during the gaps, warranty continuity |
-| Never renew | $839 | The tool as shipped in 2026 | Model years released after coverage ends, warranty coverage |
-
-Figures assume the 2026 bonus year is claimed; without it, add $299 to each row.
+<ScenarioTable
+  rows={[
+    {
+      approach: 'Renew every year',
+      spend: '$1,736',
+      get: 'Continuous coverage, warranty stays active',
+      give: 'Nothing material',
+    },
+    {
+      approach: 'Renew every other year',
+      spend: '$1,437',
+      get: 'Coverage in alternate years',
+      give: 'New model years during the gaps, warranty continuity',
+    },
+    {
+      approach: 'Never renew',
+      spend: '$839',
+      get: 'The tool as shipped in 2026',
+      give: 'Model years released after coverage ends, warranty coverage',
+    },
+  ]}
+  note="Figures assume the 2026 bonus year is claimed; without it, add $299 to each row."
+/>
 
 ### What actually stops when it lapses
 

@@ -34,3 +34,44 @@
 .content-body blockquote {
   @apply my-4 border-l-4 border-slate-300 pl-4 italic text-slate-600;
 }
+
+/* 正文表格：默认值（表头居中、无边框、数字不齐）看起来是坏的，必须显式定义 */
+.content-body table {
+  @apply my-6 w-full border-collapse text-sm;
+  font-variant-numeric: tabular-nums;
+}
+.content-body thead th {
+  @apply border-b-2 border-slate-200 bg-slate-50 px-3 py-2 text-left text-xs font-semibold tracking-wide text-slate-500 uppercase;
+}
+.content-body tbody td {
+  @apply border-b border-slate-100 px-3 py-3 align-top text-slate-700;
+}
+.content-body tbody tr:last-child td {
+  @apply border-b-0;
+}
+.content-body tbody tr:nth-child(even) {
+  @apply bg-slate-50/70;
+}
+.content-body tbody td:first-child {
+  @apply font-medium text-slate-900;
+}
+.content-body table caption {
+  @apply mb-2 text-left text-xs text-slate-500;
+}
+
+/* 窄屏：表格整体横向滚动，避免列被挤成竖排文字 */
+@media (max-width: 767px) {
+  .content-body table {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .content-body table thead,
+  .content-body table tbody,
+  .content-body table tr {
+    display: table;
+    width: 100%;
+    min-width: 520px;
+    table-layout: auto;
+  }
+}

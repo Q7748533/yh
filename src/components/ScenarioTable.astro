@@ -1,0 +1,89 @@
+---
+// 持有成本场景表：桌面用表格（数字右对齐、斑马纹），移动端自动变成卡片堆叠
+interface Row {
+  approach: string;
+  spend: string;
+  get: string;
+  give: string;
+}
+
+interface Props {
+  rows: Row[];
+  note?: string;
+}
+
+const { rows, note } = Astro.props;
+---
+
+<div class="my-6">
+  <div class="hidden md:block">
+    <table class="w-full border-collapse text-sm">
+    <caption class="sr-only">Ownership scenarios and their five-year cost</caption>
+    <thead>
+      <tr>
+        <th
+          scope="col"
+          class="border-b-2 border-slate-200 bg-slate-50 px-3 py-2 text-left text-xs font-semibold tracking-wide text-slate-500 uppercase"
+        >
+          Approach
+        </th>
+        <th
+          scope="col"
+          class="border-b-2 border-slate-200 bg-slate-50 px-3 py-2 text-right text-xs font-semibold tracking-wide whitespace-nowrap text-slate-500 uppercase"
+        >
+          5-year spend
+        </th>
+        <th
+          scope="col"
+          class="border-b-2 border-slate-200 bg-slate-50 px-3 py-2 text-left text-xs font-semibold tracking-wide text-slate-500 uppercase"
+        >
+          What you get
+        </th>
+        <th
+          scope="col"
+          class="border-b-2 border-slate-200 bg-slate-50 px-3 py-2 text-left text-xs font-semibold tracking-wide text-slate-500 uppercase"
+        >
+          What you give up
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((r, i) => (
+          <tr class={i % 2 === 1 ? 'bg-slate-50/70' : ''}>
+            <td class="border-b border-slate-100 px-3 py-3 align-top font-medium text-slate-900">{r.approach}</td>
+            <td class="border-b border-slate-100 px-3 py-3 text-right align-top font-semibold text-slate-900 tabular-nums">
+              {r.spend}
+            </td>
+            <td class="border-b border-slate-100 px-3 py-3 align-top text-slate-700">{r.get}</td>
+            <td class="border-b border-slate-100 px-3 py-3 align-top text-slate-700">{r.give}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+    </table>
+  </div>
+
+  <div class="space-y-3 md:hidden">
+    {
+      rows.map((r) => (
+        <div class="rounded-lg border border-slate-200 p-4">
+          <p class="text-sm font-semibold text-slate-900">{r.approach}</p>
+          <p class="mt-0.5 text-xl font-bold text-slate-900 tabular-nums">{r.spend}</p>
+          <dl class="mt-3 space-y-2">
+            <div>
+              <dt class="text-[11px] font-semibold tracking-wide text-slate-400 uppercase">What you get</dt>
+              <dd class="mt-0.5 text-sm leading-6 text-slate-700">{r.get}</dd>
+            </div>
+            <div>
+              <dt class="text-[11px] font-semibold tracking-wide text-slate-400 uppercase">What you give up</dt>
+              <dd class="mt-0.5 text-sm leading-6 text-slate-700">{r.give}</dd>
+            </div>
+          </dl>
+        </div>
+      ))
+    }
+  </div>
+
+  {note && <p class="mt-2 text-xs text-slate-500">{note}</p>}
+</div>
