@@ -309,6 +309,28 @@ if (existsSync(sitemapFile)) {
   }
 }
 
+// 12) 推广链接覆盖：每篇测评的 ASIN 必须在 src/data/affiliate.ts 里登记
+const affiliateSrc = existsSync('src/data/affiliate.ts') ? readFileSync('src/data/affiliate.ts', 'utf8') : '';
+const registeredAsins = new Set([...affiliateSrc.matchAll(/^\s{2}([A-Z0-9]{10}):\s*\{/gm)].map((m) => m[1]));
+check(registeredAsins.size > 0, 'src/data/affiliate.ts 里没有登记任何推广链接');
+
+for (const page of reviewPages) {
+  const slug = page.replace(/\\/g, '/').split('/')[2];
+  const mdx = join('src', 'content', 'reviews', `${slug}.mdx`);
+  if (!existsSync(mdx)) continue;
+  const src = readFileSync(mdx, 'utf8');
+  const asin = src.match(/^amazonAsin:\s*"([^"]+)"/m)?.[1];
+  const override = /^affiliateUrl:\s*"([^"]+)"/m.test(src);
+  if (!override) {
+    check(Boolean(asin), `${slug}: 既没有 affiliateUrl 也没有 amazonAsin，CTA 会指向 #`);
+    check(
+      !asin || registeredAsins.has(asin),
+      `${slug}: ASIN ${asin ?? '—'} 未在 src/data/affiliate.ts 登记推广链接`
+    );
+  }
+  check(!/YOUR-TAG-20/.test(readHtml(page)), `${slug}: 仍含占位推广 tag YOUR-TAG-20`);
+}
+
 console.log(`\nQA: 检查 ${reviewPages.length} 个测评页`);
 for (const n of notes) console.log(`  ! ${n}`);
 

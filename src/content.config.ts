@@ -15,7 +15,8 @@ const reviews = defineCollection({
     listPriceUsd: z.number().positive().optional(),
     // 价格说明：如 "Limited-time deal, 36% off list"
     priceNote: z.string().max(120).optional(),
-    affiliateUrl: z.string().url(),
+    // 可选：留空则按 amazonAsin 从 src/data/affiliate.ts 查表
+    affiliateUrl: z.string().url().optional(),
     amazonAsin: z.string().optional(),
     // Amazon 参考评分——仅作参考展示，禁止写入本站 schema
     amazonRating: z.number().min(0).max(5).optional(),
