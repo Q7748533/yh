@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { POLICY_UPDATED, SITE_EMAIL, SITE_NAME } from '../consts';
+---
+
+<Base
+  title="Terms of use"
+  description="How this site's reviews should be read, what we are responsible for, and what we are not."
+  path="/terms/"
+>
+  <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Terms' }]} />
+
+  <article class="mx-auto max-w-3xl px-4 py-10">
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900">Terms of use</h1>
+    <p class="mt-2 text-sm text-slate-500">Last updated: {POLICY_UPDATED}</p>
+
+    <div class="content-body mt-6">
+      <p>
+        By reading {SITE_NAME} you agree to these terms. They exist to be clear about what our reviews are — and are not.
+      </p>
+
+      <h2>What our reviews are</h2>
+      <p>
+        We publish research-based analysis of publicly available product information: specification sheets, manufacturer
+        documentation, retailer listings, pricing and published owner feedback. Where we have not used a product
+        ourselves, the page says so explicitly ("Research-based"). We do not describe hands-on experience we have not had.
+      </p>
+
+      <h2>Editorial independence</h2>
+      <p>
+        Brands cannot pay for a score, a ranking, a placement or a mention. Affiliate commissions do not influence
+        conclusions. How we score is published on our <a href="/methodology/">methodology page</a>, and how we make money
+        is described in our <a href="/disclosure/">affiliate disclosure</a>.
+      </p>
+
+      <h2>Accuracy and prices</h2>
+      <p>
+        Specifications and prices change without notice. Every page shows the date its price was checked, but the figure
+        you see at a retailer is the authoritative one. If you find an error, tell us at
+        <a href={`mailto:${SITE_EMAIL}`}>{SITE_EMAIL}</a> and we will correct it.
+      </p>
+
+      <h2>Not professional advice</h2>
+      <p>
+        Our automotive content discusses diagnostic procedures, coding and repair workflows. It is general information,
+        not a service manual. Always follow the vehicle manufacturer's published procedures and safety instructions.
+        Incorrect coding or programming can damage a vehicle's control modules. You are responsible for the work you
+        perform.
+      </p>
+
+      <h2>Limitation of liability</h2>
+      <p>
+        The site is provided "as is". To the extent permitted by law, we are not liable for any loss arising from
+        reliance on the content, including purchase decisions, repair outcomes or lost profits.
+      </p>
+
+      <h2>Intellectual property</h2>
+      <p>
+        Text, scoring tables and original charts on this site are ours. Manufacturer product images remain the property
+        of their owners and are used for identification with attribution. You may quote short excerpts with a link back;
+        do not republish pages in full.
+      </p>
+
+      <h2>Third-party links</h2>
+      <p>
+        Outbound links, including affiliate links, lead to sites we do not control. Their terms and privacy practices are
+        their own.
+      </p>
+
+      <h2>Changes</h2>
+      <p>We may update these terms; the date at the top of the page reflects the current version.</p>
+
+      <h2>Contact</h2>
+      <p>
+        <a href={`mailto:${SITE_EMAIL}`}>{SITE_EMAIL}</a> · See also our <a href="/privacy/">privacy policy</a>.
+      </p>
+    </div>
+  </article>
+</Base>

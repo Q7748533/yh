@@ -1,0 +1,102 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { POLICY_UPDATED, SITE_EMAIL, SITE_LEGAL_NAME, SITE_NAME } from '../consts';
+
+const operator = SITE_LEGAL_NAME || SITE_NAME;
+---
+
+<Base
+  title="Privacy policy"
+  description="What data this site collects, how cookies and analytics are used, and how to exercise your rights."
+  path="/privacy/"
+>
+  <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Privacy' }]} />
+
+  <article class="mx-auto max-w-3xl px-4 py-10">
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900">Privacy policy</h1>
+    <p class="mt-2 text-sm text-slate-500">Last updated: {POLICY_UPDATED}</p>
+
+    <div class="content-body mt-6">
+      <p>
+        This policy explains what information {operator} ("we") collects when you visit {SITE_NAME}, why we collect it,
+        and what you can do about it. We keep this page short on purpose: the site is a publication, not a platform.
+      </p>
+
+      <h2>What we collect</h2>
+      <ul>
+        <li>
+          <strong>Analytics data.</strong> We use Google Analytics 4 to understand which pages are read and how people
+          arrive. With your consent this includes approximate location (derived from IP), device and browser type, and
+          pages viewed. We do not use it to identify individuals.
+        </li>
+        <li>
+          <strong>Server logs.</strong> Our host (Cloudflare) records standard request data such as IP address, user
+          agent and timestamps for security and abuse prevention.
+        </li>
+        <li>
+          <strong>Messages you send us.</strong> If you email us, we keep the message so we can reply and, where
+          relevant, correct an article.
+        </li>
+      </ul>
+      <p>
+        We do not run accounts, newsletters or comment systems, so we do not collect names, passwords or payment details.
+      </p>
+
+      <h2>Cookies and consent</h2>
+      <p>
+        Analytics cookies are only set after you accept them. Until then, Google Analytics runs in consent mode with
+        storage denied, which means no cookies are written for measurement. You can change your choice at any time by
+        clearing this site's data in your browser, and you can block cookies entirely in your browser settings — the
+        site works without them.
+      </p>
+
+      <h2>Affiliate links</h2>
+      <p>
+        Some links point to retailers, including Amazon. Those links carry an identifier that tells the retailer we
+        referred you, and the retailer may set its own cookies once you arrive. We do not receive your name, address or
+        payment information. What the retailer does with your data is governed by its own privacy policy. Our
+        <a href="/disclosure/">affiliate disclosure</a> explains how this affects our editorial decisions — in short, it
+        does not.
+      </p>
+
+      <h2>Third parties we rely on</h2>
+      <ul>
+        <li><strong>Cloudflare</strong> — hosting and content delivery.</li>
+        <li><strong>Google Analytics</strong> — aggregated traffic measurement.</li>
+        <li><strong>Retailers</strong> (for example Amazon) — only when you click an outbound product link.</li>
+      </ul>
+      <p>
+        Site search runs in your browser after you click the search box; queries are not sent to us.
+      </p>
+
+      <h2>How long we keep data</h2>
+      <p>
+        Analytics data is retained for 14 months. Server logs are kept by our host for a short period for security
+        purposes. Emails are kept for as long as needed to resolve the matter you raised.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        Depending on where you live, you may have the right to access, correct or delete personal data we hold, to object
+        to processing, or to withdraw consent. Write to <a href={`mailto:${SITE_EMAIL}`}>{SITE_EMAIL}</a> and we will
+        respond within 30 days.
+      </p>
+
+      <h2>Children</h2>
+      <p>This site is intended for adults. We do not knowingly collect data from children under 16.</p>
+
+      <h2>Changes</h2>
+      <p>
+        If this policy changes materially we will update the date at the top of this page. Continued use of the site
+        after a change means you accept the updated policy.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy: <a href={`mailto:${SITE_EMAIL}`}>{SITE_EMAIL}</a>. See also our
+        <a href="/terms/">terms of use</a>.
+      </p>
+    </div>
+  </article>
+</Base>

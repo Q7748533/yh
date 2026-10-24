@@ -11,6 +11,11 @@ function check(condition, message) {
   if (!condition) failures.push(message);
 }
 
+// 警告项：不阻断构建，但上线/投放前必须清零（见 docs/ads-readiness.md）
+function warn(condition, message) {
+  if (!condition) notes.push(message);
+}
+
 function readHtml(path) {
   return readFileSync(path, 'utf8');
 }
@@ -195,8 +200,54 @@ for (const p of comparePages) {
   );
 }
 
-// 7) 全站 canonical 域名检查（SITE_URL 未设置时会暴露）
+// 7) 投放就绪（Google Ads）：合规页、真实联系信息、可核查表述
+check(existsSync(join(DIST, 'privacy', 'index.html')), '缺少 /privacy/ 页面（Ads 审核与隐私合规必需）');
+check(existsSync(join(DIST, 'terms', 'index.html')), '缺少 /terms/ 页面');
+
 const homeHtml = readHtml(join(DIST, 'index.html'));
+check(
+  homeHtml.includes('href="/privacy/"') && homeHtml.includes('href="/terms/"'),
+  '页脚缺少 Privacy / Terms 链接'
+);
+
+const placeholderPages = [];
+for (const file of walkHtml(DIST)) {
+  if (/example\.(com|org|net)/i.test(readHtml(file))) placeholderPages.push(file.replace(/\\/g, '/'));
+}
+warn(
+  placeholderPages.length === 0,
+  `占位域名 example.com 出现在 ${placeholderPages.length} 个页面 —— 投放前必须替换真实邮箱与主体信息`
+);
+
+const BANNED_CLAIMS = [
+  /guaranteed/i,
+  /risk[- ]free/i,
+  /100%\s*(effective|accurate|safe|works)/i,
+  /#1\b/,
+  /number one/i,
+  /best in the world/i,
+  /unbeatable/i,
+  /miracle/i,
+];
+for (const doc of bodies) {
+  for (const re of BANNED_CLAIMS) {
+    const hit = doc.text.match(re);
+    check(
+      !hit,
+      `${doc.file.replace(/\\/g, '/')}: 出现绝对化表述「${hit ? hit[0] : ''}」（Ads 不可核查声明风险）`
+    );
+  }
+}
+
+// 价格时效：过期价格属于误导性陈述
+for (const page of reviewPages) {
+  const hit = readHtml(page).match(/as of (\d{4}-\d{2}-\d{2})/);
+  if (!hit) continue;
+  const days = Math.floor((Date.now() - new Date(hit[1]).getTime()) / 86400000);
+  check(days <= 120, `${page.replace(/\\/g, '/')}: 价格核对日期 ${hit[1]} 已 ${days} 天未更新（上限 120 天）`);
+}
+
+// 8) 全站 canonical 域名检查（SITE_URL 未设置时会暴露）
 if (homeHtml.includes('https://example.com')) {
   notes.push('警告：canonical 仍为占位域名 https://example.com —— 部署前设置 SITE_URL 环境变量');
 }
