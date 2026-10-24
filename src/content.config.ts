@@ -11,6 +11,10 @@ const reviews = defineCollection({
     rating: z.number().min(0).max(5),
     priceUsd: z.number().positive().optional(),
     priceCheckedAt: z.coerce.date().optional(),
+    // 划线原价 / 建议零售价：促销结束后的参考价，用于"双价"呈现
+    listPriceUsd: z.number().positive().optional(),
+    // 价格说明：如 "Limited-time deal, 36% off list"
+    priceNote: z.string().max(120).optional(),
     affiliateUrl: z.string().url(),
     amazonAsin: z.string().optional(),
     // Amazon 参考评分——仅作参考展示，禁止写入本站 schema
