@@ -1,0 +1,86 @@
+---
+// 目录：桌面右侧 sticky 高亮当前章节，移动端折叠
+interface Item {
+  text: string;
+  slug: string;
+  depth: number;
+}
+
+interface Props {
+  items: Item[];
+  variant?: 'mobile' | 'desktop';
+}
+
+const { items, variant = 'desktop' } = Astro.props;
+---
+
+{
+  variant === 'mobile' ? (
+    <details class="mb-6 rounded-lg border border-slate-200 lg:hidden" aria-label="Table of contents">
+      <summary class="cursor-pointer px-4 py-3 text-sm font-medium text-slate-700">
+        In this review · {items.length} sections
+      </summary>
+      <ol class="space-y-0.5 px-4 pb-4 text-sm">
+        {items.map((i) => (
+          <li class={i.depth === 3 ? 'pl-4' : ''}>
+            <a href={`#${i.slug}`} class="block py-1 text-slate-600 hover:text-slate-900">
+              {i.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </details>
+  ) : (
+    <nav aria-label="Table of contents" class="hidden lg:block">
+      <div class="sticky top-6">
+        <p class="text-xs font-semibold tracking-wide text-slate-400 uppercase">In this review</p>
+        <ol class="mt-3 space-y-1 border-l border-slate-200 text-sm">
+          {items.map((i) => (
+            <li>
+              <a
+                href={`#${i.slug}`}
+                data-toc-link={i.slug}
+                class:list={[
+                  '-ml-px block border-l-2 border-transparent py-1 pl-3 text-slate-600 hover:text-slate-900',
+                  i.depth === 3 && 'pl-6 text-[13px] text-slate-500',
+                ]}
+              >
+                {i.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </nav>
+  )
+}
+
+<script is:inline>
+  (function () {
+    var links = document.querySelectorAll('[data-toc-link]');
+    if (!links.length) return;
+    var map = {};
+    links.forEach(function (l) {
+      map[l.getAttribute('data-toc-link')] = l;
+    });
+    var root = document.getElementById('review-article') || document;
+    var targets = root.querySelectorAll('h2[id], h3[id]');
+    if (!targets.length || !('IntersectionObserver' in window)) return;
+    var obs = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          links.forEach(function (l) {
+            l.classList.remove('border-blue-600', 'text-blue-700', 'font-medium');
+          });
+          var active = map[e.target.id];
+          if (active) active.classList.add('border-blue-600', 'text-blue-700', 'font-medium');
+        });
+      },
+      { rootMargin: '-80px 0px -65% 0px', threshold: 0 }
+    );
+    targets.forEach(function (t) {
+      obs.observe(t);
+    });
+  })();
+</script>

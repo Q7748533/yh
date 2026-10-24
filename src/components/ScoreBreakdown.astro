@@ -1,0 +1,51 @@
+---
+// 评分分解：解释总分怎么来的（版式标准：有 rating 就要有可解释的分解）
+interface Item {
+  label: string;
+  score: number;
+  weight: number;
+}
+
+interface Props {
+  items: Item[];
+  total: number;
+}
+
+const { items, total } = Astro.props;
+const weighted = items.reduce((sum, i) => sum + i.score * i.weight, 0);
+---
+
+<div data-score-breakdown class="my-6 rounded-xl border border-slate-200 p-5">
+  <ul class="space-y-4">
+    {
+      items.map((item) => {
+        const pct = Math.max(2, (item.score / 5) * 100);
+        const weak = item.score < 3.5;
+        return (
+          <li>
+            <div class="flex items-baseline justify-between gap-3">
+              <span class="text-sm text-slate-700">
+                {item.label}
+                <span class="ml-1 text-xs text-slate-400">weight {Math.round(item.weight * 100)}%</span>
+              </span>
+              <span class:list={['text-sm font-semibold', weak ? 'text-red-700' : 'text-slate-900']}>
+                {item.score.toFixed(1)}
+              </span>
+            </div>
+            <div class="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100">
+              <div class:list={['h-full rounded-full', weak ? 'bg-red-500' : 'bg-blue-600']} style={`width:${pct}%`} />
+            </div>
+          </li>
+        );
+      })
+    }
+  </ul>
+  <div class="mt-5 flex items-center justify-between border-t border-slate-200 pt-3">
+    <span class="text-xs text-slate-500">Weighted total</span>
+    <span class="text-base font-bold text-slate-900">{weighted.toFixed(1)} / 5</span>
+  </div>
+  <p class="mt-2 text-xs text-slate-400">
+    Matches our published score of {total.toFixed(1)}. Weights are set per category in our
+    <a href="/methodology/" class="underline hover:text-slate-600">methodology</a>.
+  </p>
+</div>

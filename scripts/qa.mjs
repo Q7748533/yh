@@ -86,6 +86,24 @@ for (const page of reviewPages) {
   check(/<html lang="en"/.test(html), `${name}: 缺少 html lang 属性`);
   check(/<figure[\s>]/.test(html), `${name}: 缺少自制图表/图片（figure 元素）`);
   check(html.includes('Our score'), `${name}: 缺少本站评分展示区`);
+
+  // 版式标准（2026-10-24 确立）
+  check(html.includes('data-decision-card'), `${name}: 缺少首屏决策卡`);
+  check(html.includes('id="pros-cons"'), `${name}: 缺少优缺点区块`);
+  check(html.includes('id="specs"'), `${name}: 缺少规格表区块（frontmatter specs 未渲染）`);
+  check(html.includes('data-score-breakdown'), `${name}: 缺少评分分解（frontmatter scoreBreakdown 未渲染）`);
+  check(html.includes('id="verdict"'), `${name}: 缺少结论区块`);
+  check(/aria-label="Table of contents"/.test(html), `${name}: 缺少目录`);
+  check(html.includes('<details'), `${name}: FAQ 未使用折叠（details/summary）`);
+
+  const pCard = html.indexOf('data-decision-card');
+  const pPros = html.indexOf('id="pros-cons"');
+  const pSpecs = html.indexOf('id="specs"');
+  const pBody = html.indexOf('id="article-body"');
+  check(
+    pCard > -1 && pPros > pCard && pSpecs > pPros && pBody > pSpecs,
+    `${name}: 区块顺序不符（应为 决策卡 → 优缺点 → 规格表 → 正文）`
+  );
 }
 
 // 4) 全站 canonical 域名检查（SITE_URL 未设置时会暴露）

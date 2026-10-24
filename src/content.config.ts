@@ -23,6 +23,18 @@ const reviews = defineCollection({
     specs: z.record(z.string(), z.string()),
     author: z.string(),
     verdict: z.string(),
+    // 首屏摘要：2–4 句，渲染在决策卡下方（版式标准：优缺点必须落在前 3 屏）
+    tldr: z.string().min(80).max(600),
+    // 评分分解：权重之和必须为 1，加权结果必须等于 rating（构建期强制校验）
+    scoreBreakdown: z
+      .array(
+        z.object({
+          label: z.string(),
+          score: z.number().min(0).max(5),
+          weight: z.number().min(0).max(1),
+        })
+      )
+      .optional(),
     // FAQ 区块：渲染为可见问答 + FAQPage JSON-LD
     faqs: z
       .array(z.object({ q: z.string(), a: z.string() }))
@@ -30,6 +42,22 @@ const reviews = defineCollection({
     updatedAt: z.coerce.date(),
     draft: z.boolean().default(true),
     ogImage: image().optional(),
+  }).superRefine((data, ctx) => {
+    if (!data.scoreBreakdown?.length) return;
+    const totalWeight = data.scoreBreakdown.reduce((sum, i) => sum + i.weight, 0);
+    if (Math.abs(totalWeight - 1) > 0.001) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `scoreBreakdown 权重之和为 ${totalWeight.toFixed(2)}，必须为 1`,
+      });
+    }
+    const weighted = data.scoreBreakdown.reduce((sum, i) => sum + i.score * i.weight, 0);
+    if (Math.abs(weighted - data.rating) > 0.06) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `scoreBreakdown 加权结果 ${weighted.toFixed(2)} 与 rating ${data.rating} 不一致（容差 0.06）`,
+      });
+    }
   }),
 });
 

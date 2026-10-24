@@ -38,6 +38,26 @@ author: "Editorial Team"
 # 结论：3–5 句，说清"适合谁 / 不适合谁 / 最大隐性成本"
 verdict: ""
 
+# 首屏摘要（必填，80–600 字符）：渲染在决策卡下方。
+# 注意：不要再在正文写 "## TL;DR"，版式由布局统一控制
+tldr: ""
+
+# 评分分解（必填）：权重之和必须 = 1，加权结果必须 = rating（容差 0.06）
+# 构建期强制校验，改分项忘了改总分会导致构建失败
+scoreBreakdown:
+  - label: "Specification verification"
+    score: 4.5
+    weight: 0.25
+  - label: "Capability vs. claims"
+    score: 4.5
+    weight: 0.3
+  - label: "Long-term ownership cost"
+    score: 3.5
+    weight: 0.2
+  - label: "Value at price"
+    score: 4.5
+    weight: 0.25
+
 # FAQ 4–6 条：来自真实搜索意图，答案要能独立成立（AI 搜索会直接引用）
 faqs:
   - q: ""
@@ -50,9 +70,11 @@ draft: true
 
 import SpecChart from '../../components/SpecChart.astro';
 
-## TL;DR
-
-三句话：是什么、多少钱、最大的坑是什么。
+{/*
+  版式由 ReviewLayout 统一控制，以下区块会自动渲染，不要写进正文：
+  决策卡 / TL;DR / 优缺点 / 规格表 / 评分分解 / 目录 / 结论 / FAQ
+  正文从 "How we evaluated this" 开始。
+*/}
 
 ## How we evaluated this
 

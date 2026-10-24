@@ -39,6 +39,20 @@ specs:
   "In the box": "ONE tablet, ONE VCI, power adapter, OBD-II extension cable, USB-C cables, quick guide"
 author: "Editorial Team"
 verdict: "The TOPDON ONE puts a J2534 interface, OE topology mapping and ECU coding for ten major brands into an $839 package — capability that flagship tablets still charge two to three times as much for. If you run a small shop or do serious DIY work on 2013-and-newer vehicles, the hardware case is strong. Budget for the $299 annual subscription before you buy, because coverage and warranty both depend on it, and confirm your specific models are supported rather than trusting the universal-fit label."
+tldr: "The TOPDON ONE is an $839 Android diagnostic tablet with a J2534 pass-thru VCI, OE topology mapping, ECU coding for ten high-volume brands and more than 50 service functions. On paper it covers the core independent-shop workflow at roughly half the price of flagship tablets. The catch is ownership: $299 a year is what keeps new-vehicle coverage and the hardware warranty alive, and the listing's own daily-cost framing does not add up."
+scoreBreakdown:
+  - label: "Specification verification"
+    score: 4.6
+    weight: 0.25
+  - label: "Capability vs. claims"
+    score: 4.5
+    weight: 0.3
+  - label: "Long-term ownership cost"
+    score: 3.2
+    weight: 0.2
+  - label: "Value at price"
+    score: 4.4
+    weight: 0.25
 faqs:
   - q: "Does the TOPDON ONE work without a subscription?"
     a: "Yes, but with limits. TopDon states that core diagnostics and bidirectional functions stay active without a subscription. What stops is new vehicle data and hardware warranty coverage. In practice that means the tool keeps working on vehicles already in its database, but newer model years released after your coverage expires may not be supported."
@@ -57,10 +71,6 @@ draft: false
 ---
 
 import SpecChart from '../../components/SpecChart.astro';
-
-## TL;DR
-
-The TOPDON ONE is an $839 Android diagnostic tablet that bundles a J2534 pass-thru VCI, OE-level topology mapping, ECU coding for ten high-volume brands and more than 50 service functions. On paper it covers the core independent-shop workflow at roughly half what flagship tablets cost. The catch is ownership: a $299 annual subscription is what keeps new-vehicle coverage and the hardware warranty alive, and the listing's own daily-cost framing does not quite add up.
 
 ## How we evaluated this
 
@@ -112,6 +122,16 @@ One year of software updates is included. TopDon is currently adding a second ye
 />
 
 Three years of coverage with the promotion comes to about $1,138; five years about $1,736. Compare that with the sticker price and the subscription is a meaningful share of ownership cost — roughly a third of the hardware price every year after the included period.
+
+<SpecChart
+  caption="Five-year spend split, assuming the 2026 bonus year is claimed: $839 hardware against $897 in renewals"
+  items={[
+    { label: "Hardware", value: 839, unit: "$" },
+    { label: "Updates, 5 years", value: 897, unit: "$" },
+  ]}
+/>
+
+Across five years the software line slightly exceeds the hardware price: 52% of total spend is subscription, not the tool.
 
 Two details deserve attention before purchase. First, the hardware warranty is tied to an active subscription, which is unusual: most tool makers warrant hardware independently of software plans. Second, without a subscription the tool keeps working on the vehicles already in its database, but new model years released later will not be covered. For a shop working on late-model cars, that is a functional limit, not a cosmetic one.
 

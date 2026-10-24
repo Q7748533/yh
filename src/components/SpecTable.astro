@@ -1,4 +1,5 @@
 ---
+// 规格表：两列自适应，移动端自动换行，不做横向滚动
 interface Props {
   specs: Record<string, string>;
 }
@@ -9,16 +10,16 @@ const entries = Object.entries(specs);
 
 {
   entries.length > 0 && (
-    <div class="my-6 overflow-x-auto">
+    <div class="my-6 overflow-hidden rounded-lg border border-slate-200">
       <table class="w-full border-collapse text-sm">
         <caption class="sr-only">Specifications</caption>
         <tbody>
-          {entries.map(([key, value]) => (
-            <tr class="border-b border-slate-100">
-              <th scope="row" class="w-2/5 py-2 pr-4 text-left font-medium text-slate-500">
+          {entries.map(([key, value], i) => (
+            <tr class:list={[i % 2 === 1 && 'bg-slate-50']}>
+              <th scope="row" class="w-2/5 px-4 py-2.5 text-left align-top font-medium text-slate-500">
                 {key}
               </th>
-              <td class="py-2 text-slate-800">{value}</td>
+              <td class="px-4 py-2.5 align-top text-slate-800">{value}</td>
             </tr>
           ))}
         </tbody>
