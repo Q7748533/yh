@@ -1,0 +1,65 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCategoryMeta } from '../../data/categoryMeta';
+import { breadcrumbSchema, itemListSchema } from '../../utils/schema';
+
+const reviews = await getCollection('reviews', (r) => !r.data.draft);
+
+const counts = reviews.reduce<Record<string, number>>((acc, r) => {
+  acc[r.data.category] = (acc[r.data.category] ?? 0) + 1;
+  return acc;
+}, {});
+
+const categories = Object.entries(counts).map(([slug, count]) => ({ slug, count, meta: getCategoryMeta(slug) }));
+
+const jsonLd = [
+  itemListSchema(
+    Astro.site,
+    'Categories',
+    categories.map((c) => ({ name: c.meta.name, path: `/best/${c.slug}/` }))
+  ),
+  breadcrumbSchema(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: 'Best of', path: '/best/' },
+  ]),
+];
+---
+
+<Base
+  title="Best of: categories"
+  description="Browse our product categories, with every review scored on the same published rubric."
+  path="/best/"
+  jsonLd={jsonLd}
+>
+  <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Best of' }]} />
+
+  <div class="mx-auto max-w-4xl px-4 py-10">
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900">Browse by category</h1>
+    <p class="mt-2 max-w-2xl text-slate-600">
+      Each category page ranks every product we have reviewed in that space, with the same weighted rubric applied.
+    </p>
+
+    <ul class="mt-8 space-y-4">
+      {
+        categories.map((c) => (
+          <li>
+            <a
+              href={`/best/${c.slug}/`}
+              class="group flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-5 transition hover:border-slate-300 hover:bg-slate-50"
+            >
+              <div>
+                <p class="text-lg font-semibold text-slate-900 group-hover:text-blue-700">{c.meta.name}</p>
+                <p class="mt-1 text-sm text-slate-600">{c.meta.intro}</p>
+              </div>
+              <span class="shrink-0 text-sm text-slate-500">
+                {c.count} review{c.count === 1 ? '' : 's'}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>

@@ -106,7 +106,39 @@ for (const page of reviewPages) {
   );
 }
 
-// 4) 全站 canonical 域名检查（SITE_URL 未设置时会暴露）
+// 4) 站内链接完整性：所有 href="/..." 必须能在 dist 找到对应文件（防导航 404）
+function walkHtml(dir) {
+  const out = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...walkHtml(full));
+    else if (entry.name.endsWith('.html')) out.push(full);
+  }
+  return out;
+}
+
+const brokenLinks = new Set();
+for (const file of walkHtml(DIST)) {
+  const html = readHtml(file);
+  const hrefs = html.match(/href="\/[^"]*"/g) || [];
+  for (const raw of hrefs) {
+    const href = raw.slice(6, -1).split('#')[0].split('?')[0];
+    if (!href || href === '/' || href.startsWith('/pagefind/')) continue;
+    const rel = href.replace(/^\//, '');
+    const candidates = href.endsWith('/')
+      ? [join(DIST, rel, 'index.html')]
+      : [join(DIST, rel), join(DIST, rel, 'index.html')];
+    if (!candidates.some((p) => existsSync(p))) {
+      brokenLinks.add(`${href} ← ${file.replace(/\\/g, '/')}`);
+    }
+  }
+}
+check(
+  brokenLinks.size === 0,
+  `站内死链 ${brokenLinks.size} 处：${[...brokenLinks].slice(0, 5).join(' | ')}`
+);
+
+// 5) 全站 canonical 域名检查（SITE_URL 未设置时会暴露）
 const homeHtml = readHtml(join(DIST, 'index.html'));
 if (homeHtml.includes('https://example.com')) {
   notes.push('警告：canonical 仍为占位域名 https://example.com —— 部署前设置 SITE_URL 环境变量');

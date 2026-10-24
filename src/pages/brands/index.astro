@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { breadcrumbSchema, itemListSchema } from '../../utils/schema';
+
+const reviews = await getCollection('reviews', (r) => !r.data.draft);
+
+const brands = [...new Set(reviews.map((r) => r.data.brand))].map((brand) => ({
+  brand,
+  slug: brand.toLowerCase().replace(/\s+/g, '-'),
+  count: reviews.filter((r) => r.data.brand === brand).length,
+}));
+
+const jsonLd = [
+  itemListSchema(
+    Astro.site,
+    'Brands',
+    brands.map((b) => ({ name: b.brand, path: `/brands/${b.slug}/` }))
+  ),
+  breadcrumbSchema(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: 'Brands', path: '/brands/' },
+  ]),
+];
+---
+
+<Base
+  title="Brands we cover"
+  description="Every brand we have reviewed, grouped so you can compare a single maker's line-up."
+  path="/brands/"
+  jsonLd={jsonLd}
+>
+  <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: 'Brands' }]} />
+
+  <div class="mx-auto max-w-4xl px-4 py-10">
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900">Brands we cover</h1>
+    <p class="mt-2 max-w-2xl text-slate-600">
+      Coverage grouped by manufacturer. Brands cannot pay to appear here, and a review is never removed at a brand's
+      request.
+    </p>
+
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+      {
+        brands.map((b) => (
+          <li>
+            <a
+              href={`/brands/${b.slug}/`}
+              class="group flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-5 transition hover:border-slate-300 hover:bg-slate-50"
+            >
+              <span class="text-base font-semibold text-slate-900 group-hover:text-blue-700">{b.brand}</span>
+              <span class="shrink-0 text-sm text-slate-500">
+                {b.count} review{b.count === 1 ? '' : 's'}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
