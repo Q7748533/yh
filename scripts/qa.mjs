@@ -290,6 +290,25 @@ for (const page of reviewPages) {
   }
 }
 
+// 11) sitemap 不得包含 noindex 页面（Search Console 会报「已提交的网址标记为 noindex」）
+const sitemapFile = join(DIST, 'sitemap-0.xml');
+if (existsSync(sitemapFile)) {
+  const urls = [...readFileSync(sitemapFile, 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  for (const url of urls) {
+    const path = url.replace(/^https?:\/\/[^/]+/, '');
+    const file = path === '/' ? join(DIST, 'index.html') : join(DIST, path, 'index.html');
+    if (!existsSync(file)) {
+      check(false, `sitemap 含不存在的页面：${path}`);
+      continue;
+    }
+    const html = readHtml(file);
+    check(
+      !/<meta name="robots" content="noindex/.test(html),
+      `sitemap 含 noindex 页面：${path}（应从未提交列表中过滤掉）`
+    );
+  }
+}
+
 console.log(`\nQA: 检查 ${reviewPages.length} 个测评页`);
 for (const n of notes) console.log(`  ! ${n}`);
 
