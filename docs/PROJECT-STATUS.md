@@ -1,4 +1,4 @@
-# 项目记录（截至 2026-10-24 19:40）
+# 项目记录（截至 2026-10-24 23:00）
 
 ## 一、一页概览
 
@@ -8,13 +8,13 @@
 | 域名 | **https://thepriceaudit.com**（apex 200、HTTP→HTTPS 301、`www` 301 到 apex 且保留参数） |
 | 仓库 | https://github.com/Q7748533/yh（public，`main`） |
 | 本地路径 | `D:/cpz` |
-| 部署 | `npm run deploy`（构建 + 质检 + wrangler 直传），未接 Git 自动构建 |
-| 当前规模 | 17 页面、15 组件、4 脚本、**53 项构建校验**、2 篇测评、2 份主张台账、9 份文档 |
-| sitemap | **12 条**（noindex 页已排除） |
+| 部署 | `npm run deploy`（构建 + 质检 + wrangler 直传 + **IndexNow 自动提交**），未接 Git 自动构建 |
+| 当前规模 | 17 页面、15 组件、**5 脚本**、**59 项构建校验**、2 篇测评、2 份主张台账、9 份文档 |
+| sitemap | **12 条**（noindex 页已排除，测评页带真实 lastmod） |
 | 目标规模 | 100 篇以上，跨品类（汽车诊断 / 美发 / 咖啡机） |
 | 定位 | 双轨：SEO 常态 + 部分测评页可转 Google Ads 投放 |
 | 原则 | 合规优先，产出速度可慢 |
-| 提交数 | 41 |
+| 提交数 | **48** |
 
 ## 二、时间线
 
@@ -34,7 +34,24 @@
 | `f9e4f19` | 推广链接集中到 `src/data/affiliate.ts`（MaaS 链接） |
 | `81edb42` | 披露文案改为"Amazon + 联盟网络"，加 rel 校验 |
 | `dc3e20f` | 无佣金文章模式 + 品类/品牌页索引门槛 |
-| 本次 | robots/RSS/seo 的 example.com fallback 清零 + 本记录 |
+| `fd3032f` | robots/RSS/seo 的 example.com fallback 清零 |
+
+**阶段 8：Bing 渠道与爬虫卫生（10-24 深夜）**
+
+起因：用户提交 Bing Webmaster Tools 后连续报两个问题，逐个排查修复。
+
+| 提交 | 内容 |
+|---|---|
+| `3312cf7` | sitemap 加真实 `lastmod`（只给有 `updatedAt` 的测评页，静态页不编造日期） |
+| `8a3fa29` | **接入 IndexNow**：key 文件 + 提交脚本 + 串进 deploy；默认只提交当天变更（流式） |
+| `6e86b1f` | 换成 BWT 生成的 key（`f5e81f53…`），后台可显示已验证 |
+| `8498661` | **BWT 报「400-499 错误」**：Cloudflare 邮箱混淆把 `mailto:` 改写成 `/cdn-cgi/l/email-protection#<hash>`，爬虫抓到 404 → robots 屏蔽 `/cdn-cgi/` |
+| `81037f7` | **BWT 报「缺少 alt」**：Astro 把 `alt=""` 渲染成裸 `alt`，首页卡片图无效 → 组件加 `imageAlt`，QA 全站校验 |
+| `b40fd70` | 补上 featured 卡片的 `imageAlt` 传参 |
+
+**这一阶段的两个教训**：
+- 爬虫报错要先分清**误报**（Cloudflare 内部路径）和**真 bug**（Astro 渲染），处理方式完全不同
+- 校验要加在**构建产物层**：`alt=""` 在源码里看着没问题，只有输出 HTML 才暴露
 
 ## 三、技术架构
 
@@ -42,7 +59,7 @@
 
 **页面（17）**：`/`、`/reviews/`、`/reviews/<slug>/`、`/best/`、`/best/<category>/`、`/brands/`、`/brands/<brand>/`、`/compare/<a>-vs-<b>/`、About、Methodology、Disclosure、Contact、Privacy、Terms、404、`/og/<slug>.png`、RSS/robots/sitemap
 
-**脚本（4）**：`qa.mjs`（53 项校验）、`price.mjs`（实时价）、`og-image.mjs`、`serp.mjs`
+**脚本（5）**：`qa.mjs`（59 项校验）、`price.mjs`（实时价）、`indexnow.mjs`（变更提交）、`og-image.mjs`、`serp.mjs`
 
 **数据层**：
 - `src/data/affiliate.ts` —— ASIN → 联盟链接（唯一入口）
@@ -66,9 +83,12 @@
 - 跨页重复句（模板化正文）
 - 品类术语（非汽车品类出现车主/车辆/OBD 等）
 - 绝对化表述（guaranteed/100%/risk-free/#1）
-- sitemap 含 noindex 页
+- sitemap 含 noindex 页 / 含不存在的页
 - 联盟链接缺 `rel="sponsored"`
 - ASIN 未登记 / 残留 `YOUR-TAG-20`
+- **任意 `<img>` 缺合法的 `alt="..."`**（构建产物层检查，不是源码层）
+- robots.txt 缺 `Disallow: /cdn-cgi/` 或 Sitemap 声明
+- IndexNow key 文件缺失 / 内容与文件名不符 / 未进 dist
 
 **两条铁律**：
 - 规格冲突时两处来源并列，以设备标识为准；禁止把"等于"写成"低于"
@@ -103,6 +123,11 @@
 | 邮箱 | Email Routing：`hello@thepriceaudit.com` → 转发（MX = route1/2/3.mx.cloudflare.net） |
 | GA4 | `G-0NGKMQCZNZ`（`consts.ts` 的 `GA_MEASUREMENT_ID`） |
 | GSC | 已提交 `sitemap-index.xml` |
+| Bing Webmaster | 已通过「导入自 GSC」验证 |
+| IndexNow | key `public/f5e81f53abcd4a7ebe78e737e7ab0f0e.txt`（内容=文件名）；`npm run indexnow` 默认只提交当天变更，`--all` 全量；已串进 `npm run deploy` |
+| robots.txt | `Allow: /` + `Disallow: /cdn-cgi/`（屏蔽 Cloudflare 邮箱混淆路径）+ Sitemap 声明 |
+
+**三个收录渠道全部打通**：Google（GSC）、Bing（BWT + IndexNow）、sitemap/robots 基础。
 
 ## 九、SEO 与选题结论
 
@@ -123,10 +148,11 @@
 
 | 优先级 | 事项 | 状态 |
 |---|---|---|
-| 高 | 咖啡机垂直区第一篇（需先跑 6 词调研） | 未开始 |
-| 高 | 观察 GSC 收录与展现（2–4 周后再决定第三篇） | 进行中 |
+| **高** | **咖啡机垂直区第一篇**（需先跑 6 词调研）——基础设施已收尾，内容才是瓶颈 | 未开始 |
+| 高 | 观察 GSC / BWT 收录与展现（2–4 周后再决定第三篇） | 进行中 |
 | 中 | 第二个品牌（解锁品类页：≥3 篇 + ≥2 品牌） | 未开始 |
 | 中 | 价格历史（Keepa 手工查 / Rainforest $18 月付） | 待定 |
+| 低 | HTML 加 `ETag` / `Last-Modified`（Cloudflare Pages 默认不发，需 Worker 或 `_headers`） | 未开始 |
 | 低 | CMP 替换自建同意条（面向 EEA 时） | 未开始 |
 
 ## 十二、环境坑
@@ -141,3 +167,7 @@
 8. Cloudflare 可视化规则编辑器：字段选「主机名/等于」，**不要**把 `http.host eq "..."` 写进「值」
 9. **自查会漏**：术语与框架的错机器查不出，用户已连续抓到 5 次（320°F、无订阅、车主、时间单位、sitemap 含 noindex）
 10. 判定逻辑必须单点（`indexability.mjs`），否则页面 noindex 与 sitemap 会漂移
+11. **Astro 的 `alt=""` 会渲染成没有值的裸 `alt`**（`<img ... alt sizes=...>`），是无效 HTML。组件里必须传真实 alt 文本
+12. **Cloudflare 邮箱混淆会把 `mailto:` 改写成 `/cdn-cgi/l/email-protection#<hash>`**，爬虫顺着抓会 404。robots 必须屏蔽 `/cdn-cgi/`
+13. 爬虫报错先分清**误报**（Cloudflare 内部路径）和**真 bug**（渲染问题），处理方式相反
+14. IndexNow key 文件名必须等于文件内容，且脚本按正则自动发现——换 key 只换文件，不改代码
