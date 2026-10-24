@@ -7,6 +7,7 @@ import CtaButton from '../../components/CtaButton.astro';
 import { getCategoryMeta } from '../../data/categoryMeta';
 import { breadcrumbSchema, itemListSchema } from '../../utils/schema';
 import { reviewSlug } from '../../utils/seo';
+import { isCategoryIndexable, MIN_CATEGORY_REVIEWS, MIN_CATEGORY_BRANDS } from '../../utils/indexability.mjs';
 
 export async function getStaticPaths() {
   const reviews = await getCollection('reviews', (r) => !r.data.draft);
@@ -32,9 +33,10 @@ const tableRows = specKeys.map((key) => ({
 
 const year = new Date().getFullYear();
 // 产品数不足 3 个时不使用 "Best X" 表述，避免与页面实际内容不符（也降低薄内容风险）
-const isRanked = sorted.length >= 3;
+// 品类页门槛：≥3 篇 且 ≥2 个品牌（单品牌不是横评，见 src/utils/indexability.mjs）
+const isRanked = isCategoryIndexable(category);
 const pageTitle = isRanked ? `Best ${meta.name} (${year})` : `${meta.name}: Reviews & Comparison`;
-// 不足 3 个产品时 noindex：单产品品类页属于薄内容，不进索引
+// 不满足门槛时 noindex：单品牌或篇数不足都属薄内容
 const noindex = !isRanked;
 const jsonLd = [
   itemListSchema(

@@ -2,11 +2,12 @@
 // 移动端底部固定购买条：滚过决策卡后出现，可关闭（本会话记住）
 interface Props {
   product: string;
-  affiliateUrl: string;
+  buyUrl: string;
+  isAffiliate?: boolean;
   priceUsd?: number;
 }
 
-const { product, affiliateUrl, priceUsd } = Astro.props;
+const { product, buyUrl, priceUsd, isAffiliate = true } = Astro.props;
 ---
 
 <div
@@ -21,13 +22,13 @@ const { product, affiliateUrl, priceUsd } = Astro.props;
       {priceUsd !== undefined && <p class="text-sm font-bold text-slate-900">${priceUsd.toFixed(0)}</p>}
     </div>
     <a
-      href={affiliateUrl}
-      rel="sponsored nofollow noopener"
+      href={buyUrl}
+      rel={isAffiliate ? 'sponsored nofollow noopener' : 'nofollow noopener'}
       target="_blank"
       data-item-name={product}
       class="shrink-0 rounded-lg bg-amber-400 px-4 py-2 text-sm font-bold text-slate-900"
     >
-      Check price
+      {isAffiliate ? 'Check price' : 'Visit site'}
     </a>
     <button type="button" data-sticky-close aria-label="Dismiss price bar" class="shrink-0 px-1 text-lg leading-none text-slate-400">
       ×

@@ -6,18 +6,36 @@ interface Props {
   label?: string;
   className?: string;
   itemName?: string;
+  /** true = 联盟链接（rel 带 sponsored）；false = 厂商官网等中性链接 */
+  isAffiliate?: boolean;
 }
 
-const { href, priceUsd, priceCheckedAt, label = 'Check price on Amazon', className = '', itemName } = Astro.props;
+const {
+  href,
+  priceUsd,
+  priceCheckedAt,
+  label = 'Check price on Amazon',
+  className = '',
+  itemName,
+  isAffiliate = true,
+} = Astro.props;
+
+const rel = isAffiliate ? 'sponsored nofollow noopener' : 'nofollow noopener';
 ---
 
 <div class:list={['not-prose', className]}>
   <a
     href={href}
-    rel="sponsored nofollow noopener"
+    rel={rel}
     target="_blank"
     data-item-name={itemName}
-    class="inline-flex items-center gap-2 rounded-lg bg-amber-400 px-5 py-2.5 text-sm font-bold text-slate-900 transition hover:bg-amber-300"
+    data-affiliate={isAffiliate ? 'true' : 'false'}
+    class:list={[
+      'inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-bold transition',
+      isAffiliate
+        ? 'bg-amber-400 text-slate-900 hover:bg-amber-300'
+        : 'border border-slate-300 bg-white text-slate-800 hover:bg-slate-50',
+    ]}
   >
     {label}
     <svg viewBox="0 0 20 20" class="h-4 w-4" fill="currentColor" aria-hidden="true">
@@ -31,6 +49,11 @@ const { href, priceUsd, priceCheckedAt, label = 'Check price on Amazon', classNa
         ${priceUsd.toFixed(2)}
         {priceCheckedAt && ` · price as of ${priceCheckedAt.toISOString().slice(0, 10)}`} · price may change
       </p>
+    )
+  }
+  {
+    !isAffiliate && (
+      <p class="mt-1.5 text-xs text-slate-500">No affiliate link on this one — we earn nothing from it.</p>
     )
   }
 </div>

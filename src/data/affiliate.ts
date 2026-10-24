@@ -36,3 +36,31 @@ export function affiliateUrlFor(asin: string | undefined, override?: string): st
 
 /** 供质检使用：当前已登记的产品数量 */
 export const AFFILIATE_COUNT = Object.keys(AFFILIATE_LINKS).length;
+
+export interface BuyLink {
+  url: string;
+  /** true = 联盟链接（需 rel="sponsored" + 佣金披露）；false = 厂商官网等中性链接 */
+  isAffiliate: boolean;
+  label: string;
+}
+
+/**
+ * 决定某篇文章的购买入口。
+ * 优先级：联盟链接 > 厂商官网 > 无入口（不渲染按钮）
+ * 拿不到联盟链接的竞品照常评测，只是不带佣金——页面会明写这一点。
+ */
+export function buyLinkFor(args: {
+  asin?: string;
+  affiliateUrl?: string;
+  manufacturerUrl?: string;
+  brand: string;
+}): BuyLink | undefined {
+  const affiliate = affiliateUrlFor(args.asin, args.affiliateUrl);
+  if (affiliate) {
+    return { url: affiliate, isAffiliate: true, label: 'Check price on Amazon' };
+  }
+  if (args.manufacturerUrl) {
+    return { url: args.manufacturerUrl, isAffiliate: false, label: `Visit ${args.brand}` };
+  }
+  return undefined;
+}

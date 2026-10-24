@@ -4,7 +4,9 @@ interface Props {
   rating: number;
   updatedAt: Date;
   product: string;
-  affiliateUrl: string;
+  buyUrl: string;
+  isAffiliate?: boolean;
+  buyLabel?: string;
   priceUsd?: number;
   priceCheckedAt?: Date;
   listPriceUsd?: number;
@@ -17,7 +19,9 @@ const {
   rating,
   updatedAt,
   product,
-  affiliateUrl,
+  buyUrl,
+  isAffiliate = true,
+  buyLabel = 'Check price on Amazon',
   priceUsd,
   priceCheckedAt,
   listPriceUsd,
@@ -96,18 +100,29 @@ const updated = updatedAt.toISOString().slice(0, 10);
     }
   </div>
 
-  <a
-    href={affiliateUrl}
-    rel="sponsored nofollow noopener"
-    target="_blank"
-    data-item-name={product}
-    class="mt-4 block rounded-lg bg-amber-400 px-5 py-3 text-center text-sm font-bold text-slate-900 transition hover:bg-amber-300"
-  >
-    Check price on Amazon
-  </a>
+  {
+    buyUrl && (
+      <a
+        href={buyUrl}
+        rel={isAffiliate ? 'sponsored nofollow noopener' : 'nofollow noopener'}
+        target='_blank'
+        data-item-name={product}
+        class:list={[
+          'mt-4 block rounded-lg px-5 py-3 text-center text-sm font-bold transition',
+          isAffiliate
+            ? 'bg-amber-400 text-slate-900 hover:bg-amber-300'
+            : 'border border-slate-300 bg-white text-slate-800 hover:bg-slate-50',
+        ]}
+      >
+        {buyLabel}
+      </a>
+    )
+  }
 
   <p class="mt-2 text-xs leading-5 text-slate-500">
-    Affiliate link · updated {updated} · we may earn a commission, which never affects the score ·{' '}
+    {isAffiliate
+      ? `Affiliate link · updated ${updated} · we may earn a commission, which never affects the score`
+      : `No affiliate link · updated ${updated} · we earn nothing from this product`} ·{' '}
     <a href="/disclosure/" class="underline hover:text-slate-700">how we make money</a>
   </p>
 </div>

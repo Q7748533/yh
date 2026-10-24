@@ -47,14 +47,13 @@ for (const page of reviewPages) {
   check(html.includes('"@type":"Product"'), `${name}: 缺少 Product 结构化数据`);
   // 披露：决策卡内的近 CTA 披露 + 页脚的联盟声明，两者都要有
   check(
-    /we may earn a commission/i.test(html),
-    `${name}: 决策卡附近缺少联盟披露（应为 "we may earn a commission"）`
+    /we may earn a commission/i.test(html) || /we earn nothing from this product/i.test(html),
+    `${name}: 决策卡附近缺少佣金披露（联盟或无佣金两种写法任一）`
   );
   check(
     /earn commissions on qualifying purchases/i.test(html),
     `${name}: 页脚缺少联盟关系声明`
   );
-  check(html.includes('rel="sponsored nofollow noopener"'), `${name}: 联盟链接缺少 sponsored nofollow 属性`);
   check(html.includes('rel="canonical"'), `${name}: 缺少 canonical`);
 
   if (html.includes('Research-based review')) {
@@ -317,7 +316,7 @@ if (existsSync(sitemapFile)) {
   }
 }
 
-// 12) 推广链接覆盖：每篇测评的 ASIN 必须在 src/data/affiliate.ts 里登记
+// 12) 推广入口覆盖：每篇测评必须有购买入口（联盟链接 或 厂商官网），且登记一致
 const affiliateSrc = existsSync('src/data/affiliate.ts') ? readFileSync('src/data/affiliate.ts', 'utf8') : '';
 const registeredAsins = new Set([...affiliateSrc.matchAll(/^\s{2}([A-Z0-9]{10}):\s*\{/gm)].map((m) => m[1]));
 check(registeredAsins.size > 0, 'src/data/affiliate.ts 里没有登记任何推广链接');
@@ -328,15 +327,25 @@ for (const page of reviewPages) {
   if (!existsSync(mdx)) continue;
   const src = readFileSync(mdx, 'utf8');
   const asin = src.match(/^amazonAsin:\s*"([^"]+)"/m)?.[1];
-  const override = /^affiliateUrl:\s*"([^"]+)"/m.test(src);
-  if (!override) {
-    check(Boolean(asin), `${slug}: 既没有 affiliateUrl 也没有 amazonAsin，CTA 会指向 #`);
+  const hasOverride = /^affiliateUrl:\s*"([^"]+)"/m.test(src);
+  const manufacturerUrl = src.match(/^manufacturerUrl:\s*"([^"]+)"/m)?.[1];
+  const monetised = hasOverride || (asin && registeredAsins.has(asin));
+
+  if (!monetised && !manufacturerUrl) {
+    check(false, `${slug}: 没有可用的购买入口 —— 需登记联盟链接或提供 manufacturerUrl`);
+  }
+  if (asin && !hasOverride && !registeredAsins.has(asin)) {
+    check(false, `${slug}: ASIN ${asin} 未在 src/data/affiliate.ts 登记推广链接`);
+  }
+  const html = readHtml(page);
+  check(!/YOUR-TAG-20/.test(html), `${slug}: 仍含占位推广 tag YOUR-TAG-20`);
+  // 非联盟链接不能冒充联盟链接（会构成虚假披露）
+  if (!monetised && manufacturerUrl) {
     check(
-      !asin || registeredAsins.has(asin),
-      `${slug}: ASIN ${asin ?? '—'} 未在 src/data/affiliate.ts 登记推广链接`
+      !/rel="sponsored[^"]*"[^>]*data-item-name/.test(html),
+      `${slug}: 无联盟链接却渲染了 rel="sponsored" 按钮`
     );
   }
-  check(!/YOUR-TAG-20/.test(readHtml(page)), `${slug}: 仍含占位推广 tag YOUR-TAG-20`);
 }
 
 // 13) 联盟链接必须带 rel="sponsored"/"nofollow"（Google 链接垃圾政策要求）

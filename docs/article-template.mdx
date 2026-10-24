@@ -14,9 +14,10 @@ product: "产品名（用于卡片、对比表、schema）"
 rating: 4.0
 priceUsd: 0
 priceCheckedAt: 2026-01-01
-# 联盟链接：rel=sponsored 已由组件处理，这里只填带 tag 的 URL
-affiliateUrl: "https://www.amazon.com/dp/ASIN?tag=YOUR-TAG-20"
-amazonAsin: ""
+# 推广入口：rel 属性由组件按是否联盟自动处理
+amazonAsin: "B0XXXXXXXX"   # 查 src/data/affiliate.ts 取推广链接
+manufacturerUrl: ""        # 拿不到联盟链接时填厂商产品页（页面会明写「无佣金」）
+# affiliateUrl: 一般不用写，除非要临时覆盖 affiliate.ts 里的链接
 # Amazon 参考评分：只展示，绝不进 schema
 amazonRating: 0
 amazonReviewCount: 0

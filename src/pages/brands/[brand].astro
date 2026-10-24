@@ -5,6 +5,8 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import CtaButton from '../../components/CtaButton.astro';
 import { breadcrumbSchema, itemListSchema } from '../../utils/schema';
 import { titleCase, reviewSlug } from '../../utils/seo';
+import { isBrandIndexable, MIN_BRAND_REVIEWS } from '../../utils/indexability.mjs';
+import { getBrandMeta } from '../../data/brandMeta';
 
 export async function getStaticPaths() {
   const reviews = await getCollection('reviews', (r) => !r.data.draft);
@@ -16,6 +18,10 @@ export async function getStaticPaths() {
 }
 
 const { brand, reviews } = Astro.props;
+const brandSlug = String(Astro.params.brand);
+const meta = getBrandMeta(brandSlug);
+// 少于 2 篇的品牌页只是单个产品的复述，不进索引
+const noindex = !isBrandIndexable(brand);
 const jsonLd = [
   itemListSchema(
     Astro.site,
@@ -34,6 +40,7 @@ const jsonLd = [
   title={`${brand} Reviews`}
   description={`All ${brand} product reviews and comparisons on this site.`}
   path={`/brands/${Astro.params.brand}/`}
+  noindex={noindex}
   jsonLd={jsonLd}
 >
   <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: `${brand} reviews` }]} />
@@ -43,6 +50,7 @@ const jsonLd = [
     <p class="mt-2 text-slate-600">
       {reviews.length} review{reviews.length === 1 ? '' : 's'} of {brand} products, with scores, specs and buying advice.
     </p>
+    {meta.intro && <p class="mt-4 leading-7 text-slate-700">{meta.intro}</p>}
 
     <ul class="mt-8 space-y-4">
       {

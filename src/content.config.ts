@@ -18,6 +18,8 @@ const reviews = defineCollection({
     // 可选：留空则按 amazonAsin 从 src/data/affiliate.ts 查表
     affiliateUrl: z.string().url().optional(),
     amazonAsin: z.string().optional(),
+    // 无联盟链接时指向厂商官网产品页（非联盟，rel 不带 sponsored）
+    manufacturerUrl: z.string().url().optional(),
     // Amazon 参考评分——仅作参考展示，禁止写入本站 schema
     amazonRating: z.number().min(0).max(5).optional(),
     amazonReviewCount: z.number().int().nonnegative().optional(),
