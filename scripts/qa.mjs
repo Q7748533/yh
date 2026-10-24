@@ -252,6 +252,16 @@ if (homeHtml.includes('https://example.com')) {
   notes.push('警告：canonical 仍为占位域名 https://example.com —— 部署前设置 SITE_URL 环境变量');
 }
 
+// 9) 主张台账：每篇测评必须有一份 docs/claims/<slug>.md，逐条列出数值与来源
+const CLAIMS_DIR = join('docs', 'claims');
+for (const page of reviewPages) {
+  const slug = page.replace(/\\/g, '/').split('/')[2];
+  check(
+    existsSync(join(CLAIMS_DIR, `${slug}.md`)),
+    `${slug}: 缺少主张台账 docs/claims/${slug}.md —— 每个数字都必须能指回来源`
+  );
+}
+
 console.log(`\nQA: 检查 ${reviewPages.length} 个测评页`);
 for (const n of notes) console.log(`  ! ${n}`);
 
