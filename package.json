@@ -12,7 +12,8 @@
     "serp": "node --env-file=.env scripts/serp.mjs",
     "deploy": "npm run build && wrangler pages deploy dist --project-name=yh --branch=main --commit-dirty=true",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "price": "node --env-file=.env scripts/price.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.14",

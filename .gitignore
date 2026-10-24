@@ -20,3 +20,6 @@ Thumbs.db
 
 # serp cache
 .serp-cache/
+
+# price cache
+.price-cache/
