@@ -14,7 +14,7 @@ const jsonLd = [
   itemListSchema(
     Astro.site,
     'All reviews',
-    reviews.map((r) => ({ name: r.data.title, path: `/reviews/${reviewSlug(r.id)}/`, rating: r.data.rating }))
+    reviews.map((r) => ({ name: r.data.title, path: `/reviews/${reviewSlug(r.id)}/` }))
   ),
 ];
 ---

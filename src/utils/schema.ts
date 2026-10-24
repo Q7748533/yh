@@ -72,14 +72,6 @@ export function productReviewSchema(opts: {
       datePublished: formatDate(opts.updatedAt),
       dateModified: formatDate(opts.updatedAt),
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: opts.rating,
-      bestRating: 5,
-      worstRating: 0,
-      ratingCount: 1,
-      reviewCount: 1,
-    },
   };
   if (opts.asin) review.productID = opts.asin;
   if (opts.priceUsd && opts.priceCheckedAt) {
@@ -97,7 +89,7 @@ export function productReviewSchema(opts: {
 export function itemListSchema(
   site: URL | undefined,
   name: string,
-  items: { name: string; path: string; rating?: number }[]
+  items: { name: string; path: string }[]
 ) {
   return {
     '@context': 'https://schema.org',
@@ -108,22 +100,6 @@ export function itemListSchema(
       position: i + 1,
       name: item.name,
       url: absoluteUrl(site, item.path),
-      ...(item.rating !== undefined
-        ? {
-            item: {
-              '@type': 'Product',
-              name: item.name,
-              aggregateRating: {
-                '@type': 'AggregateRating',
-                ratingValue: item.rating,
-                bestRating: 5,
-                worstRating: 0,
-                ratingCount: 1,
-                reviewCount: 1,
-              },
-            },
-          }
-        : {}),
     })),
   };
 }

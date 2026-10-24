@@ -31,11 +31,14 @@ const tableRows = specKeys.map((key) => ({
 }));
 
 const year = new Date().getFullYear();
+// 产品数不足 3 个时不使用 "Best X" 表述，避免与页面实际内容不符（也降低薄内容风险）
+const isRanked = sorted.length >= 3;
+const pageTitle = isRanked ? `Best ${meta.name} (${year})` : `${meta.name}: Reviews & Comparison`;
 const jsonLd = [
   itemListSchema(
     Astro.site,
     `Best ${meta.name} (${year})`,
-    sorted.map((r) => ({ name: r.data.title, path: `/reviews/${reviewSlug(r.id)}/`, rating: r.data.rating }))
+    sorted.map((r) => ({ name: r.data.title, path: `/reviews/${reviewSlug(r.id)}/` }))
   ),
   breadcrumbSchema(Astro.site, [
     { name: 'Home', path: '/' },
@@ -46,15 +49,15 @@ const jsonLd = [
 ---
 
 <Base
-  title={`Best ${meta.name} (${year})`}
+  title={pageTitle}
   description={meta.intro.slice(0, 155)}
   path={`/best/${category}/`}
   jsonLd={jsonLd}
 >
-  <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: `Best ${meta.name}` }]} />
+  <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: pageTitle }]} />
 
   <div class="mx-auto max-w-4xl px-4 py-8">
-    <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Best {meta.name} ({year})</h1>
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">{pageTitle}</h1>
 
     {
       meta.intro ? (

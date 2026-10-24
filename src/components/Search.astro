@@ -1,21 +1,23 @@
 ---
-// Pagefind 站内搜索：构建后由 `pagefind --site dist` 生成索引与 UI 资源
-// dev 模式下索引不存在，仅显示占位
+// Pagefind 站内搜索：索引与 UI 资源在构建后生成
+// 懒加载：点击搜索按钮后才拉取 pagefind-ui.js/css，避免全站首屏多下载约 30KB
 ---
 
 {
   import.meta.env.PROD ? (
-    <div class="searchbox">
-      <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
-      <div id="search" />
-      <script src="/pagefind/pagefind-ui.js" is:inline />
-      <script is:inline>
-        window.addEventListener('DOMContentLoaded', () => {
-          if (typeof PagefindUI !== 'undefined') {
-            new PagefindUI({ element: '#search', showImages: false, showSubResults: true, resetStyles: true });
-          }
-        });
-      </script>
+    <div class="searchbox" data-search-mount>
+      <button
+        type="button"
+        data-search-open
+        class="flex w-full items-center gap-2 rounded-md border border-slate-300 px-3 py-2 text-left text-sm text-slate-500 hover:border-slate-400"
+        aria-label="Search this site"
+      >
+        <svg viewBox="0 0 20 20" class="h-4 w-4 shrink-0" fill="currentColor" aria-hidden="true">
+          <path d="M9 3a6 6 0 104.47 10.03l3.25 3.25a1 1 0 001.42-1.42l-3.25-3.25A6 6 0 009 3zm0 2a4 4 0 110 8 4 4 0 010-8z" />
+        </svg>
+        Search
+      </button>
+      <div id="search" hidden />
     </div>
   ) : (
     <div class="rounded-md border border-dashed border-slate-300 px-3 py-2 text-xs text-slate-400">
@@ -23,3 +25,31 @@
     </div>
   )
 }
+
+<script is:inline>
+  document.addEventListener('click', function (e) {
+    var btn = e.target && e.target.closest ? e.target.closest('[data-search-open]') : null;
+    if (!btn) return;
+    var mount = btn.closest('[data-search-mount]');
+    if (!mount) return;
+    var box = mount.querySelector('#search');
+    btn.hidden = true;
+    if (box) box.hidden = false;
+    if (mount.getAttribute('data-loaded')) return;
+    mount.setAttribute('data-loaded', '1');
+
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = '/pagefind/pagefind-ui.css';
+    document.head.appendChild(css);
+
+    var js = document.createElement('script');
+    js.src = '/pagefind/pagefind-ui.js';
+    js.onload = function () {
+      if (typeof PagefindUI !== 'undefined') {
+        new PagefindUI({ element: '#search', showImages: false, showSubResults: true, resetStyles: true });
+      }
+    };
+    document.head.appendChild(js);
+  });
+</script>

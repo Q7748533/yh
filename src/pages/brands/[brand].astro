@@ -20,7 +20,7 @@ const jsonLd = [
   itemListSchema(
     Astro.site,
     `${brand} reviews`,
-    reviews.map((r) => ({ name: r.data.title, path: `/reviews/${reviewSlug(r.id)}/`, rating: r.data.rating }))
+    reviews.map((r) => ({ name: r.data.title, path: `/reviews/${reviewSlug(r.id)}/` }))
   ),
   breadcrumbSchema(Astro.site, [
     { name: 'Home', path: '/' },
