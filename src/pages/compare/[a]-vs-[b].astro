@@ -6,6 +6,7 @@ import ComparisonTable from '../../components/ComparisonTable.astro';
 import CtaButton from '../../components/CtaButton.astro';
 import { breadcrumbSchema } from '../../utils/schema';
 import { reviewSlug } from '../../utils/seo';
+import { getCompareNote } from '../../data/compareNotes';
 
 export async function getStaticPaths() {
   const reviews = await getCollection('reviews', (r) => !r.data.draft);
@@ -16,14 +17,19 @@ export async function getStaticPaths() {
     byCategory.set(r.data.category, list);
   }
 
-  const paths: { params: { a: string; b: string }; props: { reviews: typeof reviews } }[] = [];
+  const paths: { params: { a: string; b: string }; props: { reviews: typeof reviews; note: { summary: string; verdict?: string } } }[] = [];
   for (const list of byCategory.values()) {
     for (let i = 0; i < list.length; i++) {
       for (let j = i + 1; j < list.length; j++) {
         const [x, y] = [list[i], list[j]].sort((p, q) => p.data.rating - q.data.rating);
+        const slugA = reviewSlug(x.id);
+        const slugB = reviewSlug(y.id);
+        // 发布闸门：没有人工撰写的对比分析就不生成页面
+        const note = getCompareNote(slugA, slugB);
+        if (!note) continue;
         paths.push({
-          params: { a: reviewSlug(x.id), b: reviewSlug(y.id) },
-          props: { reviews: [x, y] },
+          params: { a: slugA, b: slugB },
+          props: { reviews: [x, y], note },
         });
       }
     }
@@ -31,7 +37,7 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { reviews } = Astro.props;
+const { reviews, note } = Astro.props;
 const [x, y] = reviews;
 
 const specKeys = [...new Set([...Object.keys(x.data.specs), ...Object.keys(y.data.specs)])];
@@ -68,6 +74,12 @@ const jsonLd = [
     <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
       {x.data.product} vs {y.data.product}
     </h1>
+
+    <div class="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-5">
+      <p class="text-xs font-semibold tracking-wide text-slate-500 uppercase">The short answer</p>
+      <p class="mt-2 leading-7 text-slate-800">{note.summary}</p>
+      {note.verdict && <p class="mt-3 text-sm font-semibold text-slate-900">{note.verdict}</p>}
+    </div>
 
     <div class="mt-6 grid gap-4 sm:grid-cols-2">
       {

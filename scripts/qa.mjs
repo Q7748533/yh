@@ -138,7 +138,64 @@ check(
   `站内死链 ${brokenLinks.size} 处：${[...brokenLinks].slice(0, 5).join(' | ')}`
 );
 
-// 5) 全站 canonical 域名检查（SITE_URL 未设置时会暴露）
+// 5) 跨页重复句检测 + 正文体量：防"模板化正文"（scaled content abuse 的核心判据）
+function extractBody(html) {
+  const marker = html.indexOf('id="article-body"');
+  if (marker === -1) return '';
+  const start = html.indexOf('>', marker) + 1;
+  const end = html.indexOf('id="verdict"');
+  return html
+    .slice(start, end === -1 ? html.length : end)
+    .replace(/<script[\s\S]*?<\/script>/g, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&[a-z]+;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function sentences(text) {
+  return text
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim().toLowerCase())
+    .filter((s) => s.split(/\s+/).length >= 10);
+}
+
+const bodies = reviewPages.map((p) => ({ file: p, text: extractBody(readHtml(p)) }));
+
+for (const b of bodies) {
+  const words = b.text.split(/\s+/).filter(Boolean).length;
+  check(words >= 500, `${b.file.replace(/\\/g, '/')}: 正文仅 ${words} 词（低于 500，属薄内容）`);
+}
+
+if (bodies.length > 1) {
+  const seen = new Map();
+  const dupes = [];
+  for (const doc of bodies) {
+    const short = doc.file.replace(/\\/g, '/').split('/').slice(-2)[0];
+    for (const s of sentences(doc.text)) {
+      const prev = seen.get(s);
+      if (prev && prev !== short) dupes.push(`「${s.slice(0, 70)}…」${prev} ↔ ${short}`);
+      else if (!prev) seen.set(s, short);
+    }
+  }
+  check(
+    dupes.length === 0,
+    `跨页重复句 ${dupes.length} 条（同一句话出现在两篇文章里 = 模板化正文）：${dupes.slice(0, 3).join(' | ')}`
+  );
+}
+
+// 6) 程序化页面闸门：对比页必须有人工撰写的差异分析
+const compareDir = join(DIST, 'compare');
+const comparePages = existsSync(compareDir) ? walkHtml(compareDir).filter((p) => p.endsWith('index.html')) : [];
+for (const p of comparePages) {
+  const html = readHtml(p);
+  check(
+    html.includes('The short answer'),
+    `${p.replace(/\\/g, '/')}: 对比页缺少人工撰写的差异分析（应在 src/data/compareNotes.ts 登记）`
+  );
+}
+
+// 7) 全站 canonical 域名检查（SITE_URL 未设置时会暴露）
 const homeHtml = readHtml(join(DIST, 'index.html'));
 if (homeHtml.includes('https://example.com')) {
   notes.push('警告：canonical 仍为占位域名 https://example.com —— 部署前设置 SITE_URL 环境变量');

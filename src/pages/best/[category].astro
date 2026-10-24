@@ -34,6 +34,8 @@ const year = new Date().getFullYear();
 // 产品数不足 3 个时不使用 "Best X" 表述，避免与页面实际内容不符（也降低薄内容风险）
 const isRanked = sorted.length >= 3;
 const pageTitle = isRanked ? `Best ${meta.name} (${year})` : `${meta.name}: Reviews & Comparison`;
+// 不足 3 个产品时 noindex：单产品品类页属于薄内容，不进索引
+const noindex = !isRanked;
 const jsonLd = [
   itemListSchema(
     Astro.site,
@@ -53,6 +55,7 @@ const jsonLd = [
   description={meta.intro.slice(0, 155)}
   path={`/best/${category}/`}
   jsonLd={jsonLd}
+  noindex={noindex}
 >
   <Breadcrumbs items={[{ name: 'Home', href: '/' }, { name: pageTitle }]} />
 
