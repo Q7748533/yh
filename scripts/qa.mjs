@@ -382,6 +382,14 @@ if (keyFile) {
   check(existsSync(join(DIST, keyFile)), `IndexNow key 文件没有进构建产物：dist/${keyFile}`);
 }
 
+// 15) robots.txt 必须屏蔽 Cloudflare 内部路径（邮箱混淆会生成 /cdn-cgi/l/email-protection 链接）
+const robotsFile = join(DIST, 'robots.txt');
+if (existsSync(robotsFile)) {
+  const robots = readFileSync(robotsFile, 'utf8');
+  check(robots.includes('Disallow: /cdn-cgi/'), 'robots.txt 未屏蔽 /cdn-cgi/（爬虫会抓到邮箱混淆链接并报 404）');
+  check(/Sitemap: https:\/\//.test(robots), 'robots.txt 缺少绝对地址的 Sitemap 声明');
+}
+
 console.log(`\nQA: 检查 ${reviewPages.length} 个测评页`);
 for (const n of notes) console.log(`  ! ${n}`);
 
