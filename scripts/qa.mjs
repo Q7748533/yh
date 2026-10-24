@@ -280,10 +280,12 @@ for (const page of reviewPages) {
   const body = extractBody(readHtml(page));
   const ledgerFile = join(CLAIMS_DIR, `${slug}.md`);
   const ledger = existsSync(ledgerFile) ? readFileSync(ledgerFile, 'utf8') : '';
+  // 修正记录段需要能描述被修正的术语，因此排除在扫描范围外
+  const ledgerScan = ledger.split('## 修正记录')[0];
   for (const re of AUTOMOTIVE_TERMS) {
     const inBody = body.match(re);
     check(!inBody, `${slug}: 正文出现汽配术语「${inBody ? inBody[0] : ''}」，与品类 ${cat} 不符`);
-    const inLedger = ledger.match(re);
+    const inLedger = ledgerScan.match(re);
     check(!inLedger, `${slug}: 台账出现汽配术语「${inLedger ? inLedger[0] : ''}」，与品类 ${cat} 不符`);
   }
 }
