@@ -42,6 +42,10 @@ const reviews = defineCollection({
     updatedAt: z.coerce.date(),
     draft: z.boolean().default(true),
     ogImage: image().optional(),
+    // 产品图：厂商官方图（编辑性使用，需注明来源）或自有实拍；缺省时用自动评分卡图
+    heroImage: image().optional(),
+    imageCredit: z.string().optional(),
+    imageAlt: z.string().optional(),
   }).superRefine((data, ctx) => {
     if (!data.scoreBreakdown?.length) return;
     const totalWeight = data.scoreBreakdown.reduce((sum, i) => sum + i.weight, 0);

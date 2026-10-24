@@ -10,6 +10,7 @@ import ScoreBreakdown from '../components/ScoreBreakdown.astro';
 import CtaButton from '../components/CtaButton.astro';
 import Toc from '../components/Toc.astro';
 import StickyBuyBar from '../components/StickyBuyBar.astro';
+import { Image } from 'astro:assets';
 import { articleSchema, breadcrumbSchema, faqSchema, productReviewSchema } from '../utils/schema';
 import { reviewSlug } from '../utils/seo';
 import { AUTHOR_NAME } from '../consts';
@@ -21,6 +22,10 @@ interface Props {
 const { review } = Astro.props;
 const { data } = review;
 const { Content, headings } = await review.render();
+
+const slug = reviewSlug(review.id);
+// 每篇独立 OG 图：构建时由 /og/[slug].png 生成
+const ogPath = data.ogImage?.src ?? `/og/${slug}.png`;
 
 const related = (
   await getCollection('reviews', (r) => !r.data.draft && r.data.category === data.category && r.id !== review.id)
@@ -54,6 +59,7 @@ const jsonLd = [
     asin: data.amazonAsin,
     priceUsd: data.priceUsd,
     priceCheckedAt: data.priceCheckedAt,
+    imageUrl: data.heroImage?.src ?? ogPath,
   }),
   articleSchema({
     site: Astro.site,
@@ -76,7 +82,7 @@ const jsonLd = [
   title={data.title}
   description={data.description}
   path={`/reviews/${reviewSlug(review.id)}/`}
-  ogImage={data.ogImage?.src}
+  ogImage={ogPath}
   jsonLd={jsonLd}
   ogType="article"
 >
@@ -115,6 +121,25 @@ const jsonLd = [
       />
     </div>
 
+    {
+      data.heroImage && (
+        <figure class="mt-6">
+          <Image
+            src={data.heroImage}
+            alt={data.imageAlt ?? `${data.product} — ${data.brand}`}
+            widths={[480, 720, 960, 1200]}
+            sizes="(min-width: 1024px) 900px, 100vw"
+            class="w-full rounded-xl border border-slate-200 bg-slate-50"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <figcaption class="mt-2 text-xs text-slate-500">
+            {data.imageCredit ?? `Image: ${data.brand}`}
+          </figcaption>
+        </figure>
+      )
+    }
+
     <section id="tldr" class="mt-8">
       <h2 class="text-xs font-semibold tracking-wide text-slate-400 uppercase">TL;DR</h2>
       <p class="mt-2 text-lg leading-8 text-slate-800">{data.tldr}</p>
@@ -139,6 +164,21 @@ const jsonLd = [
         <section id="score" class="mt-8">
           <h2 class="text-2xl font-semibold text-slate-900">How the {data.rating.toFixed(1)} breaks down</h2>
           <ScoreBreakdown items={data.scoreBreakdown} total={data.rating} />
+          {!data.heroImage && (
+            <figure class="mt-4">
+              <img
+                src={ogPath}
+                alt={`${data.product} review summary: ${data.rating.toFixed(1)} out of 5`}
+                width="1200"
+                height="630"
+                loading="lazy"
+                class="w-full rounded-lg border border-slate-200"
+              />
+              <figcaption class="mt-2 text-xs text-slate-500">
+                Scoring summary · {data.brand} {data.product}
+              </figcaption>
+            </figure>
+          )}
         </section>
       )
     }

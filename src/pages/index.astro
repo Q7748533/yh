@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import ReviewCard from '../components/ReviewCard.astro';
 import { getCategoryMeta } from '../data/categoryMeta';
@@ -81,14 +82,30 @@ const jsonLd = [
         featured && (
           <a
             href={`/reviews/${reviewSlug(featured.id)}/`}
-            class="group block rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-slate-300"
+            class="group block overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:border-slate-300"
           >
-            <div class="flex items-center justify-between">
-              <span class="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-amber-900 uppercase">
-                Latest review
-              </span>
-              <span class="text-xs text-slate-400">{featured.data.updatedAt.toISOString().slice(0, 10)}</span>
-            </div>
+            {
+              featured.data.heroImage && (
+                <div class="flex aspect-[16/10] items-center justify-center border-b border-slate-100 bg-slate-50 p-6">
+                  <Image
+                    src={featured.data.heroImage}
+                    alt={featured.data.imageAlt ?? `${featured.data.product} — ${featured.data.brand}`}
+                    widths={[320, 480, 640]}
+                    sizes="(min-width: 1024px) 420px, 90vw"
+                    class="h-full w-auto object-contain"
+                    loading="eager"
+                    fetchpriority="high"
+                  />
+                </div>
+              )
+            }
+            <div class="p-6">
+              <div class="flex items-center justify-between">
+                <span class="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-amber-900 uppercase">
+                  Latest review
+                </span>
+                <span class="text-xs text-slate-400">{featured.data.updatedAt.toISOString().slice(0, 10)}</span>
+              </div>
 
             <p class="mt-5 text-xs font-semibold tracking-wide text-blue-700 uppercase">{featured.data.brand}</p>
             <p class="mt-1 text-xl leading-snug font-bold text-slate-900 group-hover:text-blue-700">
@@ -127,6 +144,7 @@ const jsonLd = [
                   {featured.data.rating >= 4 ? 'Recommended' : featured.data.rating >= 3 ? 'With caveats' : 'Skip'}
                 </p>
               </div>
+            </div>
             </div>
           </a>
         )
@@ -199,6 +217,7 @@ const jsonLd = [
             rating={featured.data.rating}
             priceUsd={featured.data.priceUsd}
             sourceType={featured.data.sourceType}
+            image={featured.data.heroImage}
           />
           {rest.map((r) => (
             <ReviewCard
@@ -209,6 +228,7 @@ const jsonLd = [
               rating={r.data.rating}
               priceUsd={r.data.priceUsd}
               sourceType={r.data.sourceType}
+              image={r.data.heroImage}
             />
           ))}
         </div>

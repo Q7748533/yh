@@ -53,6 +53,7 @@ export function productReviewSchema(opts: {
   asin?: string;
   priceUsd?: number;
   priceCheckedAt?: Date;
+  imageUrl?: string;
 }) {
   const review: Record<string, unknown> = {
     '@context': 'https://schema.org',
@@ -74,6 +75,7 @@ export function productReviewSchema(opts: {
     },
   };
   if (opts.asin) review.productID = opts.asin;
+  if (opts.imageUrl) review.image = absoluteUrl(opts.site, opts.imageUrl);
   if (opts.priceUsd && opts.priceCheckedAt) {
     review.offers = {
       '@type': 'Offer',
