@@ -60,14 +60,14 @@
 | 退换 | 30 天 refund/replacement | Rainforest |
 | 保障计划 | 4 年 $119.99；Complete Protect $16.99/月 | Rainforest |
 
-### 待修（**未改动正文，等确认**）
+### 已修（2026-10-26 00:02）
 
 | # | 问题 | 证据 | 建议 |
 |---|---|---|---|
-| 1 | **正文从未提及 AutoAuth 每年 $50**，而这是 FCA 2017+ 车主的额外经常性支出——本篇的核心正是"总持有成本" | 一手：`topdon.com/pages/topdon-diagnostic-scanners-re-listed-on-autoauth` | 在成本章节与 FAQ 补一句，口径与 AD600S 那篇一致 |
-| 2 | **未说明 SGW access 依赖有效订阅** | 一手：listing bullet 原文 "**Active updates unlock** Topology Map, ECU Coding, TopFix AI, and **SGW Access**" | 这是订阅依赖的最强证据，应写进正文 |
-| 3 | amazonRating 已从 4.5 漂到 **4.6（315）** | Rainforest 2026-10-25 | 更新 frontmatter 的 `amazonRating` |
-| 4 | 台账里 `F` 的定义重复了一行 | 本文件 | 删重复行 |
+| 1 ✅ | **正文从未提及 AutoAuth 每年 $50**，而这是 FCA 2017+ 车主的额外经常性支出——本篇的核心正是"总持有成本" | 一手：`topdon.com/pages/topdon-diagnostic-scanners-re-listed-on-autoauth` | 在成本章节与 FAQ 补一句，口径与 AD600S 那篇一致 |
+| 2 ✅ | **未说明 SGW access 依赖有效订阅** | 一手：listing bullet 原文 "**Active updates unlock** Topology Map, ECU Coding, TopFix AI, and **SGW Access**" | 这是订阅依赖的最强证据，应写进正文 |
+| 3 ✅ | amazonRating 已从 4.5 漂到 **4.6（315）** | Rainforest 2026-10-25 | 更新 frontmatter 的 `amazonRating` |
+| 4 ✅ | 台账里 `F` 的定义重复了一行 | 本文件 | 删重复行 |
 
 ### 认证状态（重要，需在正文措辞上体现）
 
@@ -77,3 +77,17 @@
 - 现有正文的 SGW 表述来源是 **listing 自述（L）**，属二手性质
 
 **结论**：正文措辞应保留"TopDon lists…"这种归属式表述（现状已如此），但**不宜升级为"已认证"**。若日后拿到含 ONE 的新版认证表，再改为事实陈述。
+
+### 本次改动新增的主张
+
+| 正文表述 | 值 | 来源 | 备注 |
+|---|---|---|---|
+| AutoAuth 年费 | **$50/年 per shop，6 用户，额外 $2/年/人** | **一手**：`topdon.com/pages/topdon-diagnostic-scanners-re-listed-on-autoauth` | 与 AD600S 那篇同一来源，口径一致 |
+| 付款主体 | "charged by AutoAuth directly — TOPDON is not involved in any transaction process" | 一手：同上，原文引述 | |
+| SGW access 依赖有效订阅 | listing bullet 原文 "**Active updates unlock** Topology Map, ECU Coding, TopFix AI, and **SGW Access**" | **一手（listing 自述）** | 正文表述为"TopDon lists … among the features that active updates unlock" |
+| FCA 车型范围 | 2017 年款起，Chrysler(RAM)/Dodge/Jeep/Fiat | 一手：TOPDON 原文"2017 and newer" + 认证表列名 | 与本篇原有"2020+ GM and Chrysler"覆盖表述不冲突：后者是协议覆盖，前者是网关认证 |
+| FCA 车主 5 年总成本 | **$1,986** | **测算**：1,736（硬件 + 3 次续费）+ 5 × 50 = 1,986 | 正文已展示算式；仍不含 OEM 编程 token |
+
+### 认证状态的措辞约束（不变）
+
+TOPDON 的 AutoAuth 认证表（2024-02-28 图片，23 型号）**不含 TOPDON ONE**。正文继续用"TopDon lists…"的归属式表述，**不得改写为"已认证"**。若拿到含 ONE 的新版表，再升级为事实陈述。

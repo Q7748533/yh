@@ -8,7 +8,7 @@ rating: 4.2
 priceUsd: 839
 priceCheckedAt: 2026-10-24
 amazonAsin: "B0GK9G6YDL"
-amazonRating: 4.5
+amazonRating: 4.6
 amazonReviewCount: 313
 sourceType: "research"
 heroImage: ../../assets/reviews/topdon-one/one-front.jpg
@@ -175,8 +175,17 @@ TopDon's wording is more specific than "you lose updates", and the three parts m
 - **Core diagnostics and bidirectional control keep working.** The tool does not brick.
 - **New vehicle data stops.** Model years released after your coverage ends are not added to the database.
 - **Hardware warranty coverage stops.** This is the unusual part: the warranty is tied to an active subscription, where most tool makers warrant the hardware independently of the software plan.
+- **Gateway access stops.** TopDon lists SGW access for FCA, Nissan and VAG vehicles among the features that "active updates unlock" — which puts it on the same side of the line as the coverage data, not with core diagnostics.
 
-For a shop working on late-model cars, the second point is a functional limit rather than a cosmetic one. The 2027 model that rolls in next year is exactly the kind of vehicle a subscription exists to cover.
+For a shop working on late-model cars, the second point is a functional limit rather than a cosmetic one. The 2027 model that rolls in next year is exactly the kind of vehicle a subscription exists to cover. The fourth is harder to notice and easier to hit: a lapsed renewal quietly removes the gateway unlock that makes late-model FCA and Nissan work possible at all.
+
+### The second annual fee, which TopDon does not charge
+
+If the vehicles in the bay are 2017-or-newer Chrysler, Dodge, Jeep, Ram or Fiat, there is another yearly cost and it goes to someone else. FCA puts those vehicles behind a security gateway that refuses diagnostic requests until the connected tool is authenticated, and the registration that authenticates it — AutoAuth — carries its own fee: **$50 a year per shop**, covering up to six users, with **$2 a year for each additional user**.
+
+TopDon publishes those figures and states that the payment "is charged by AutoAuth directly — TOPDON is not involved in any transaction process". The two charges do different jobs and neither replaces the other: the $299 keeps the tool's coverage current and keeps gateway access enabled, while the $50 is the credential the gateway itself accepts.
+
+For a shop on late-model FCA vehicles, five years therefore runs to **$1,986** rather than $1,736 — the hardware and renewals as calculated above, plus 5 × $50 in AutoAuth fees. That figure still excludes OEM programming tokens, which sit outside both.
 
 ### The $119.99 alternative to keeping the subscription alive
 
