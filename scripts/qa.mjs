@@ -445,6 +445,15 @@ if (existsSync(robotsFile)) {
   }
 }
 
+// 18) 提醒：每篇测评都应有对应的关键词调研记录（docs/serp-<slug>.md）
+// 不阻断构建——已有两篇早于该规则；但每次构建都提示，避免又跳过第 ① 步
+for (const page of reviewPages) {
+  const slug = page.replace(/\\/g, '/').split('/')[2];
+  if (!existsSync(join('docs', `serp-${slug}.md`))) {
+    notes.push(`${slug}: 缺少关键词调研记录 docs/serp-${slug}.md（写测评前应先跑 SERP）`);
+  }
+}
+
 console.log(`\nQA: 检查 ${reviewPages.length} 个测评页`);
 for (const n of notes) console.log(`  ! ${n}`);
 
