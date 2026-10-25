@@ -428,6 +428,23 @@ if (existsSync(robotsFile)) {
   if (images) console.log(`  · 图片 ${images} 个，alt 全部合法`);
 }
 
+// 17) 品类对比表不得出现空值：某个规格字段只有部分产品有，说明字段名不统一
+{
+  const bestDir = join(DIST, 'best');
+  if (existsSync(bestDir)) {
+    for (const d of readdirSync(bestDir, { withFileTypes: true }).filter((x) => x.isDirectory())) {
+      const file = join(bestDir, d.name, 'index.html');
+      if (!existsSync(file)) continue;
+      const html = readHtml(file);
+      const blanks = [...html.matchAll(/<td class="px-3 py-2 text-slate-800">—<\/td>/g)].length;
+      check(
+        blanks === 0,
+        `/best/${d.name}/: 对比表有 ${blanks} 个空值（规格字段名在各篇之间不一致，请统一命名）`
+      );
+    }
+  }
+}
+
 console.log(`\nQA: 检查 ${reviewPages.length} 个测评页`);
 for (const n of notes) console.log(`  ! ${n}`);
 
