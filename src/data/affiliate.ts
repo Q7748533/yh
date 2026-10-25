@@ -21,6 +21,10 @@ export const AFFILIATE_LINKS: Record<string, AffiliateEntry> = {
     url: 'https://pboost.me/G5Xsuvnt?uid=7748533',
     note: 'Wavytalk Steamline Pro 蒸汽直发梳',
   },
+  B09KZTYD18: {
+    url: 'https://pwiz.co/go/c9qjxpgrfmw4jzk1',
+    note: 'TOPDON AD600S OBD2 扫描仪',
+  },
 };
 
 /**
