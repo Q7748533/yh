@@ -52,7 +52,18 @@ for (const page of reviewPages) {
     !/"availability"\s*:\s*"https:\/\/schema\.org/.test(html),
     `${name}: JSON-LD 声明了 availability，我们不掌握库存（应移除）`
   );
-  // 披露：决策卡内的近 CTA 披露 + 页脚的联盟声明，两者都要有
+  // 正文不得硬编码评价数量：这个数字每天都在变，写死就会过期
+  // 决策卡已展示评分，正文重复一次反而会与卡片冲突（TOPDON ONE 曾出现卡片 4.6、正文 4.5）
+  const bodyMatch = html.match(/id="article-body"[\s\S]*?id="verdict"/);
+  if (bodyMatch) {
+    const hardCount = bodyMatch[0].match(/\b\d[\d,]{1,}\s+(?:owner\s+)?ratings\b/);
+    check(
+      !hardCount,
+      `${name}: 正文硬编码了评价数量「${hardCount?.[0] ?? ''}」——该数字每日变动，应改为不依赖具体条数的表述`
+    );
+  }
+
+
   check(
     /we may earn a commission/i.test(html) || /we earn nothing from this product/i.test(html),
     `${name}: 决策卡附近缺少佣金披露（联盟或无佣金两种写法任一）`
