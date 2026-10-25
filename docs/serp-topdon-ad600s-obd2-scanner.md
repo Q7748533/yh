@@ -67,3 +67,33 @@ autodiagsales.com ×2、TikTok、Facebook、topdon 官方对比页 ×3、Reddit�
 ## 五、结论
 
 第三篇文章的**角度对了（订阅），但没有做 SERP 校验**，属于流程缺口而非方向错误。下一篇起：**先跑 3–5 个词，再定标题与结构**。
+
+---
+
+# 补充：车型覆盖专项（2026-10-25 23:30，为扩写该章节而做）
+
+4 个词，Google 美国站前 8 条。
+
+| 词 | 前排构成 | 判断 |
+|---|---|---|
+| `topdon ad600s car list` | **TOPDON 官方 5 条**（Vehicle Coverage ×2、英国站、PDF、产品页）+ Amazon + YouTube | 官方垄断，且相关搜索全是 `car list pdf / 2020 / 2021 / 2022` |
+| `topdon ad600s compatible vehicles` | 同上，官方 5 条 + Amazon + gaugemagazine + YouTube | 同上 |
+| `topdon ad600s fca autoauth` | TOPDON 官方、eBay、Amazon、**webapp.autoauth.com**、Facebook、Reddit、topdonshop.eu、m.topdon.com | 无独立媒体解释费用 |
+| `topdon artidiag600s coverage` | 官方 4 条 + Amazon + Facebook + gaugemagazine + YouTube | 同上 |
+
+## 关键判断
+
+**1. 不能照抄车型清单。** 需求确实是"给我清单"（相关搜索反复出现 `pdf`、`2020/2021/2022`），但供给方就是厂商自己的 PDF。照搬会：① 一个月就过期 ② 无附加价值 ③ 有转载问题。
+
+**2. 可插入的位置是"清单之外的规则"**：三层覆盖（OBD-II 基线 / 四系统 / 服务功能）各自失效的方式不同；以及清单不解释的网关费用。
+
+**3. `fca autoauth` 这个词暴露了真正的空白。** PAA 直接问 "How much does FCA AutoAuth cost?"，而前 8 条里没有一条独立媒体回答。补查后确认：**$50/年，覆盖 6 个用户，额外 $2/年/人**，TOPDON 官方支持页、etools.org、Autel 页面三处数字一致。
+
+**这条正好打在"无订阅"上**——设备确实没有订阅，但 2018+ Stellantis 车主每年要付 $50 给网关运营方。这是本篇最有价值的新增事实。
+
+## 据此做的改动
+
+- 把原来 3 句话的 "Coverage and the gateway question" 扩成三节：三层覆盖 / 网关与"无订阅"的星号 / 为什么不转载清单
+- cons 从 4 条重排：合并 Wi-Fi 与电池（同属"车库工具"这一性质），腾出位置放 AutoAuth 年费
+- FAQ 把"能否适配我的车"换成"Chrysler/Dodge/Jeep/Ram 要不要 AutoAuth"
+- TL;DR 从"两件事"改为"三件事"，加入网关费用

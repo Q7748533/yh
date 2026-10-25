@@ -38,6 +38,14 @@
 | 到货电量 | 约 30% | R | 单一买家提及 |
 | 触屏故障与换新 | 主动提出退款或换货，收到升级型号 | R | 单一案例，正文已注明 |
 | 断电/需充电 | 需每周充电，深度放电可能无法开机 | L | NOTE 段厂商原文要求 |
+| **AutoAuth 年费** | **$50/年 per shop，覆盖 6 用户，额外 $2/年/人，上限 100 用户与 100 工具** | **一手：`topdon.com/pages/topdon-diagnostic-scanners-re-listed-on-autoauth` 原文**（已抓取核对，非摘要） | 2026-10-25 抓到原文 |
+| **付款主体** | "charged by AutoAuth directly. TOPDON is not involved in any transaction process" | 同上，原文引述 | 正文写"pay $50 a year to a third party" |
+| **需网关认证的车型** | **Chrysler(RAM) / Dodge / Jeep / Fiat，2017 年款起** | **一手：TOPDON 原文"2017 and newer FCA vehicles"、"SGW ... since 2017"；认证表列名含 Fiat** | 原写 2018 有误，已改 2017；**Fiat 有认证表依据，已补回**；Alfa Romeo 无列名，不写 |
+| **AD600S 是否被认证** | **是。认证表第 16 行「ArtiDiag600 S」：App V1.1.7，Chrysler(RAM)/Dodge/Jeep = V10.48，Fiat = V10.64** | **一手：认证表图片 `T2--AutoAuth_compliant_TOPDON_models_and_software_versions.jpg`（已下载并阅读）** | 名单是**图片**，文字检索查不到，必须看图 |
+| **适用地区** | 美国、墨西哥、加拿大；欧洲另走 FCA 许可渠道 | 一手：TOPDON 原文 "Applicable Area" | 正文已加这句 |
+| **附加条件** | TOPDON 要求 "valid software subscription" 才能解锁网关 | 一手：TOPDON 原文 Requirements | 正文说明 AD600S 由终身免费更新满足该条件 |
+| **OBD-II 强制年份** | 1996 年起（美国） | 联邦法规，通用事实 | 正文用"every petrol car sold in the US since 1996" |
+| CAN-FD | 支持，适用于较新 GM 等车型 | L | 厂商口径 |
 
 ## 已核对的矛盾点
 
@@ -47,3 +55,4 @@
 | 标题 "9 Reset Services" | NOTE 说共 30 项特殊服务 | 正文说明 9 常驻 / 30 试用，给出 60 天窗口 |
 | 1 星评论称"需付费订阅" | listing 明写无订阅费 | 正文拆开：无扣费属实，网络依赖属实，买家把两件事混为一谈 |
 | 2023 年评论称 Android 6 | 现 listing 写 Android 11 | 未在正文引用该评论的版本号，避免制造无谓冲突 |
+| **"无订阅" vs AutoAuth $50/年** | 设备本身确实无订阅；但 2018+ Stellantis 需向网关运营方付费 | **不合并、不淡化**：正文明确写"不是 TopDon 的订阅，但仍是经常性支出"，并说明它只影响该组车型 |

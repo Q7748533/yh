@@ -454,6 +454,30 @@ for (const page of reviewPages) {
   }
 }
 
+// 19) 主张台账的「来源」列不得留空——每个数字都必须能指回具体出处
+for (const page of reviewPages) {
+  const slug = page.replace(/\\/g, '/').split('/')[2];
+  const ledger = join('docs', 'claims', `${slug}.md`);
+  if (!existsSync(ledger)) continue;
+  const lines = readFileSync(ledger, 'utf8').split('\n');
+  const headerIdx = lines.findIndex((l) => /^\|.*来源.*\|/.test(l));
+  if (headerIdx === -1) {
+    check(false, `${slug}: 主张台账缺少「来源」列`);
+    continue;
+  }
+  const cols = lines[headerIdx].split('|').map((c) => c.trim());
+  const sourceCol = cols.findIndex((c) => c.includes('来源'));
+  let empty = 0;
+  for (const line of lines.slice(headerIdx + 2)) {
+    if (!line.trim().startsWith('|')) continue;
+    const cells = line.split('|').map((c) => c.trim());
+    if (cells.length !== cols.length) continue;
+    const src = cells[sourceCol] ?? '';
+    if (!src || src === '—' || src === '-') empty++;
+  }
+  check(empty === 0, `${slug}: 主张台账有 ${empty} 行「来源」为空，必须指回具体出处`);
+}
+
 console.log(`\nQA: 检查 ${reviewPages.length} 个测评页`);
 for (const n of notes) console.log(`  ! ${n}`);
 

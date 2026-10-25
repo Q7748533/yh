@@ -22,8 +22,8 @@ pros:
   - "CAN-FD and FCA gateway access extend the supported range into newer vehicles"
   - "A $28.99 three-year plan and a 30-day return window make trying it cheap"
 cons:
-  - "Wi-Fi is required to finish setup and for some functions, so it is a garage tool rather than a roadside one"
-  - "It runs on an internal battery, not the OBD port, and TopDon says to charge it weekly even in storage"
+  - "No subscription on the scanner itself, but 2017-and-newer Chrysler, Ram, Dodge, Jeep and Fiat sit behind a gateway that needs a separate AutoAuth registration at $50 a year"
+  - "Wi-Fi is required to finish setup and for some functions, and it runs on an internal battery you must charge weekly — a garage tool, not a roadside one"
   - "Only nine of the thirty special services persist; the rest are a free trial that ends sixty days after activation"
   - "Two active listings for the same model are priced $10 apart, so it is easy to overpay"
 specs:
@@ -42,7 +42,7 @@ specs:
   ASIN: "B09KZTYD18"
 author: "Editorial Team"
 verdict: "For a home garage working on 1996-or-newer vehicles, the AD600S is the sensible buy in TopDon's range — and the one we would take before the $839 ONE. It reads the four systems that actually throw warning lights, runs the nine resets routine maintenance needs, and never asks for another payment. The limits are real but narrow: it needs Wi-Fi to finish setup, it will not run off the OBD port alone, and 21 of its 30 special services stop sixty days after activation. None of that hurts in a garage; all of it hurts if the scanner is meant to live in the car. Add the $28.99 three-year plan and three years of use costs $224.98."
-tldr: "The AD600S is a $196 scanner with no subscription: nine service functions and lifetime updates stay free, and it reads engine, ABS, transmission and SRS codes with all ten OBD2 modes. Two things the headline buries. It needs Wi-Fi to finish setup and for some functions, and it runs on an internal battery rather than the OBD port, so it is a garage tool, not a roadside one. And 21 of the 30 special services it unlocks are a trial that ends sixty days after activation."
+tldr: "The AD600S is a $196 scanner with no subscription: nine service functions and lifetime updates stay free, and it reads engine, ABS, transmission and SRS codes with all ten OBD2 modes. Three things the headline buries. It needs Wi-Fi to finish setup and runs on an internal battery, so it is a garage tool rather than a roadside one. Twenty-one of its thirty special services are a trial that ends sixty days after activation. And on a 2017-or-newer Chrysler, Ram, Dodge, Jeep or Fiat, the security gateway needs a separate AutoAuth registration at $50 a year."
 scoreBreakdown:
   - label: "Specification verification"
     score: 4.0
@@ -61,8 +61,8 @@ faqs:
     a: "For the nine listed service functions, yes, and software updates stay free for the life of the device. The catch is scope rather than payment: thirty days after activation the scanner unlocks a free trial of all thirty special services, and when that trial ends the extra twenty-one disappear. Nothing is charged to keep them; they simply stop being available."
   - q: "Does the AD600S work without Wi-Fi?"
     a: "It cannot finish first-time setup without a connection, because the initial software download happens over Wi-Fi. After that, TopDon states that most basic diagnostics work offline. Some functions still expect a connection, which is the substance of the one-star complaints in the listing — the reviewer's claim of a required subscription is not accurate, but the complaint about needing a network is."
-  - q: "Will it work on my specific car?"
-    a: "TopDon claims 90+ brands covering 1996-and-newer OBD-II vehicles, with CAN-FD and FCA gateway support for newer models. Their own listing concedes that function availability varies by year, make, model and system, and asks buyers to supply a VIN before purchase. Do that — a reset that exists on paper and not for your vehicle is the most common way this class of tool disappoints."
+  - q: "Do I need AutoAuth for a Chrysler, Dodge, Jeep or Ram?"
+    a: "If it is a 2017-or-newer Chrysler, Ram, Dodge, Jeep or Fiat, yes. Those vehicles sit behind a security gateway that blocks diagnostic requests from unauthenticated tools, so the scanner needs AutoAuth registration before it can talk to them. AutoAuth carries its own annual fee, separate from TopDon: $50 a year covering up to six users, with $2 a year for each additional user. The scanner itself still has no subscription — this is a cost that applies only to that group of vehicles, and the fee is per shop rather than per vehicle."
   - q: "Why are there two AD600S listings at different prices?"
     a: "Two listings for the same model are live at the same time, one at $195.99 with 2,028 ratings and one at $185.99 with 1,045. They are separate catalogue entries rather than a variant selector. Check the rating count and the price before you commit, because the cheaper entry is not surfaced as an alternative on the dearer page."
   - q: "How does it compare with the TOPDON ONE?"
@@ -103,9 +103,35 @@ Oil reset, electronic parking brake, battery management, steering angle, DPF reg
 
 The footnote is the part worth reading twice. Thirty days after activation, the scanner unlocks a free trial of all thirty special services. Thirty days later the trial ends and the device returns to its nine. The window is therefore sixty days from activation, and the difference between "thirty services" and "nine services" is a date rather than a payment.
 
-### Coverage and the gateway question
+### What "90+ brands" actually covers
 
-Ninety-plus brands, 1996 and newer, with CAN-FD and FCA AutoAuth gateway access for newer vehicles. The gateway support is not cosmetic: without it, a late-model Stellantis product will refuse diagnostics regardless of what the scanner can do. Ask for a VIN check before buying — it costs nothing and it is the single most common source of disappointment in this category.
+The coverage claim is true, and it bundles three layers that fail in different ways.
+
+**Layer one — OBD-II, 1996 and newer.** Every petrol car sold in the United States since 1996 has had to speak OBD-II, and this scanner reads it. That layer is close to universal and is almost never the reason something stops working.
+
+**Layer two — the four systems.** Engine, ABS, transmission and SRS are manufacturer-specific protocols rather than the generic OBD-II set. This is where "90+ brands" starts to mean something narrower: a brand appearing on the list does not guarantee that all four systems are reachable on every model year.
+
+**Layer three — the nine service functions.** A reset talks to one control module and depends on that module being present and documented. TopDon concedes the point in its own wording: function availability varies by vehicle year, make, model and system.
+
+### The gateway, and the one asterisk on "no subscription"
+
+From the 2017 model year, FCA vehicles — Chrysler, Ram, Dodge, Jeep and Fiat — have shipped with a Secure Gateway Module that limits what an unauthenticated tool can do, down to clearing a fault code. TopDon's own support page states the arrangement directly: the gateway has been in place "since 2017", and its scanners are certified to unlock it through AutoAuth.
+
+The AD600S is on that certified list. TopDon publishes a table of compliant models, and the entry for this device reads "ArtiDiag600 S" — the name printed on the housing — at app version V1.1.7, with brand software versions V10.48 for Chrysler/Ram, Dodge and Jeep, and V10.64 for Fiat. Being listed is not the same as being ready, though: the table specifies a version for each brand, so a unit that has not been updated to those versions is not certified in practice.
+
+What the listing does not spell out is what the unlocking costs. AutoAuth is a separate service charging **$50 a year per shop**, covering up to six users, with **$2 a year for each additional user** and caps of 100 users and 100 tools per shop. TopDon publishes those figures and adds that payment "is charged by AutoAuth directly — TOPDON is not involved in any transaction process".
+
+So the accurate reading is this. The scanner has no subscription of its own. If the vehicle in front of you is a 2017-or-newer Chrysler, Ram, Dodge, Jeep or Fiat, you will pay $50 a year to a third party before the gateway will let the tool do its job. It is not a TopDon subscription, and it is a recurring cost all the same.
+
+Two details from the same page are worth carrying. The arrangement covers the United States, Mexico and Canada; European owners are pointed to a separate FCA licensing route. And TopDon lists "valid software subscription" among the requirements for gateway access — on the AD600S that requirement is met by the free lifetime updates, which is the one place where the two policies happen to line up.
+
+**CAN-FD.** Newer GM vehicles and a growing list of others use CAN-FD instead of classic CAN. The AD600S supports it, which matters for a garage that sees 2019-and-later cars; a scanner without it reads the emissions codes and little else on those vehicles.
+
+### Why we do not reprint the vehicle list
+
+TopDon publishes a coverage list as a PDF and revises it. A copy hosted here would be stale within a month and the reader would have no way to know. The list belongs to the manufacturer.
+
+What is worth knowing is how to read it: check the specific model year rather than the brand, check which of the four systems is listed for that vehicle, and check whether the reset you need appears for the module involved. If any of those is missing, ask the seller to confirm against your VIN in writing before ordering — the listing invites exactly that, and it is the cheapest step in the whole purchase.
 
 ## Subscription and true cost of ownership
 
