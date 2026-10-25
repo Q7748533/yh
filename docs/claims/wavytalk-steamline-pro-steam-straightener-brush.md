@@ -28,7 +28,7 @@
 | 自动关机 | 30 min | L | "Other Features" |
 | 型号 / ASIN | B390 / B0DCK8P752 | L | |
 | 细软发建议温度 | ≤320°F | L | "Safety Information" |
-| 制造商保修期 | **未公布** | L（缺失） | 页面确实没写；但购买页有 30 天退换与付费保障计划 |
+| 制造商保修期 | **1 年标准，注册后 +12 个月 = 2 年** | **一手：`wavytalk.com/pages/register-for-a-warranty` 原文** | **2026-10-26 复审纠正**：原写"未公布"是错的——Amazon listing 没写，但厂商官网公布了 |
 | 30 天退换 | 免费退款或换货 | A | "FREE 30-day refund/replacement" |
 | 2 年保障计划 | $6.99 **一次性** | A + F | Rainforest 亦返回该字段，交叉验证一致；非每月 |
 | 3 年保障计划 | $8.99 **一次性** | A + F | 同上；占促销价 14.1%、占原价 9.0% |
@@ -53,3 +53,32 @@
 | 买家评论被写成汽车语境用词 | 汽配模板残留（美发工具的 owner 是买家） | 全文统一为"买家评论" |
 | 2 年 / 5 年寿命假设下的 $45 / $18 | 寿命是凭空假设 | 删除，改用有出处的 3 年计划摊销 |
 | 单点价格 $89（来自 Google Shopping） | 跨零售商快照，不是 Amazon 实时价；且当时正在打折 | 改为双价：现价 $63.82 + 原价 $99.97，成本测算按两行展示 |
+
+## 复审（2026-10-26 00:10，按真实性红线标准）
+
+### 已核实无误
+
+| 项 | 复核结果 | 来源 |
+|---|---|---|
+| 现价 $63.82 / 原价 $99.97 / 36% off | 促销仍在，价格未变 | Rainforest 2026-10-26 |
+| 保障计划 $6.99（2 年）/ $8.99（3 年）/ Complete Protect $16.99/月 | 未变 | Rainforest 2026-10-26 |
+| 评分 4.4 | 5,531 → 5,536（正文不引用具体条数） | Rainforest 2026-10-26 |
+| 无绝对化措辞、无未核实竞品对比 | 扫描通过 | 全文 grep |
+
+### 已修（一处事实错误）
+
+**原表述**：`no published manufacturer warranty` / "The product listing does not state a manufacturer warranty period"
+
+**问题**：Amazon listing 确实没写，但**厂商官网公布了**——`wavytalk.com/pages/register-for-a-warranty`：
+
+> "All of our products come with a **standard one-year warranty** but by registering your product, you will receive an **additional free 12-month extended warranty**."
+
+**后果**：原文把"$8.99 三年计划"说成"补上保修缺口"，前提是错的。实际是厂商覆盖 1–2 年，计划买的是第 3 年。
+
+**修法**：
+- 正文改为先陈述厂商保修（1 年 + 注册延长 12 个月），再讲购买页的三层保障
+- 补一条真实的、可核查的不确定性：官网要求提供 product number 与 order number，但**未说明 Amazon 订单是否适用**
+- verdict 改为"a warranty that only reaches two years if you register and may not cover an Amazon order at all"
+- FAQ 同步重写
+
+**教训**：**"未公布"是缺席断言，必须查过所有一手渠道才能写。** 只查 Amazon listing 就断言"厂商没公布保修"，是典型的不完整取证。
