@@ -67,8 +67,6 @@ const jsonLd = [
     path: `/reviews/${reviewSlug(review.id)}/`,
     updatedAt: data.updatedAt,
     asin: data.amazonAsin,
-    priceUsd: data.priceUsd,
-    priceCheckedAt: data.priceCheckedAt,
     imageUrl: data.heroImage?.src ?? ogPath,
   }),
   articleSchema({

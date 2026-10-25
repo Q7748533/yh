@@ -51,8 +51,6 @@ export function productReviewSchema(opts: {
   path: string;
   updatedAt: Date;
   asin?: string;
-  priceUsd?: number;
-  priceCheckedAt?: Date;
   imageUrl?: string;
 }) {
   const review: Record<string, unknown> = {
@@ -76,15 +74,11 @@ export function productReviewSchema(opts: {
   };
   if (opts.asin) review.productID = opts.asin;
   if (opts.imageUrl) review.image = absoluteUrl(opts.site, opts.imageUrl);
-  if (opts.priceUsd && opts.priceCheckedAt) {
-    review.offers = {
-      '@type': 'Offer',
-      price: opts.priceUsd,
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-      priceValidUntil: formatDate(new Date(opts.priceCheckedAt.getTime() + 7 * 86400000)),
-    };
-  }
+  // 刻意不输出 offers：我们不是商家（merchant of record），交易发生在零售商站上。
+  // 带 offers + availability 会被 Google 判定为「商家列表」，进而要求
+  // hasMerchantReturnPolicy / shippingDetails / validFrom —— 这三项我们无权代表零售商声明，
+  // 且商家列表对价格准确性有硬要求，而我们的价格只是快照。
+  // 评论星级富摘要依赖 Review + reviewRating，与 offers 无关。
   return review;
 }
 

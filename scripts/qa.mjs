@@ -45,6 +45,13 @@ for (const page of reviewPages) {
 
   check(ldCount >= 3, `${name}: JSON-LD 少于 3 段（实际 ${ldCount}）`);
   check(html.includes('"@type":"Product"'), `${name}: 缺少 Product 结构化数据`);
+  // 不得出现 offers / availability：那会把页面标成「商家列表」，
+  // 进而被要求提供退货政策、配送详情与 validFrom——我们无权代表零售商声明
+  check(!/"offers"\s*:/.test(html), `${name}: JSON-LD 出现 offers，会把页面标成商家列表（应移除）`);
+  check(
+    !/"availability"\s*:\s*"https:\/\/schema\.org/.test(html),
+    `${name}: JSON-LD 声明了 availability，我们不掌握库存（应移除）`
+  );
   // 披露：决策卡内的近 CTA 披露 + 页脚的联盟声明，两者都要有
   check(
     /we may earn a commission/i.test(html) || /we earn nothing from this product/i.test(html),
@@ -319,6 +326,7 @@ if (existsSync(sitemapFile)) {
 // 12) 推广入口覆盖：每篇测评必须有购买入口（联盟链接 或 厂商官网），且登记一致
 const affiliateSrc = existsSync('src/data/affiliate.ts') ? readFileSync('src/data/affiliate.ts', 'utf8') : '';
 const registeredAsins = new Set([...affiliateSrc.matchAll(/^\s{2}([A-Z0-9]{10}):\s*\{/gm)].map((m) => m[1]));
+const affiliateHosts = [...affiliateSrc.matchAll(/url:\s*'https?:\/\/([^/'"]+)/g)].map((m) => m[1]);
 check(registeredAsins.size > 0, 'src/data/affiliate.ts 里没有登记任何推广链接');
 
 for (const page of reviewPages) {
@@ -339,6 +347,18 @@ for (const page of reviewPages) {
   }
   const html = readHtml(page);
   check(!/YOUR-TAG-20/.test(html), `${slug}: 仍含占位推广 tag YOUR-TAG-20`);
+
+  // 已登记联盟链接的文章必须真的渲染出联盟链接。
+  // 曾经因为手工测试后忘了还原 manufacturerUrl，线上带着厂商链接跑了整整一天。
+  if (asin && registeredAsins.has(asin)) {
+    const hosts = affiliateHosts.length
+      ? new RegExp(`https://(?:${affiliateHosts.map((h) => h.replace(/\./g, '\\.')).join('|')})`)
+      : null;
+    const rendered = hosts
+      ? [...html.matchAll(/<a\b[^>]*href="(https:\/\/[^"]+)"/g)].some((m) => hosts.test(m[1]))
+      : true;
+    check(rendered, `${slug}: ASIN ${asin} 已登记联盟链接，但页面没有渲染出联盟链接（检查 manufacturerUrl 是否误覆盖）`);
+  }
   // 非联盟链接不能冒充联盟链接（会构成虚假披露）
   if (!monetised && manufacturerUrl) {
     check(
@@ -349,9 +369,6 @@ for (const page of reviewPages) {
 }
 
 // 13) 联盟链接必须带 rel="sponsored"/"nofollow"（Google 链接垃圾政策要求）
-const affiliateHosts = [
-  ...affiliateSrc.matchAll(/url:\s*'https?:\/\/([^/'"]+)/g),
-].map((m) => m[1]);
 if (affiliateHosts.length) {
   const hostPattern = new RegExp(`https://(?:${affiliateHosts.map((h) => h.replace(/\./g, '\\.')).join('|')})`);
   let affiliateLinks = 0;
