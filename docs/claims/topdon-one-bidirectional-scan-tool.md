@@ -8,7 +8,6 @@
 - **S** = Google Shopping 快照
 - **R** = listing 买家评论（仅归纳）
 - **F** = Rainforest API 实时查询 Amazon buy box（2026-10-24）
-- **F** = Rainforest API 实时查询 Amazon buy box（2026-10-24）
 - **C** = 自有测算（写明算式）
 
 | 正文表述 | 值 | 来源 | 备注 |
@@ -50,3 +49,31 @@
 | "roughly half the price of flagship tablets" | 无出处的倍数比较（Ads 不可核查声明） |
 | "flagship tablets charge two to three times as much" | 同上 |
 | 竞品具体价格 | 未核实，正文只保留定性描述 |
+
+## 复审（2026-10-25 23:55，按真实性红线标准）
+
+### 已核实无误
+
+| 项 | 复核结果 | 来源 |
+|---|---|---|
+| 价格 $839 | 仍为 $839，无促销、无划线价 | Rainforest 2026-10-25 |
+| 退换 | 30 天 refund/replacement | Rainforest |
+| 保障计划 | 4 年 $119.99；Complete Protect $16.99/月 | Rainforest |
+
+### 待修（**未改动正文，等确认**）
+
+| # | 问题 | 证据 | 建议 |
+|---|---|---|---|
+| 1 | **正文从未提及 AutoAuth 每年 $50**，而这是 FCA 2017+ 车主的额外经常性支出——本篇的核心正是"总持有成本" | 一手：`topdon.com/pages/topdon-diagnostic-scanners-re-listed-on-autoauth` | 在成本章节与 FAQ 补一句，口径与 AD600S 那篇一致 |
+| 2 | **未说明 SGW access 依赖有效订阅** | 一手：listing bullet 原文 "**Active updates unlock** Topology Map, ECU Coding, TopFix AI, and **SGW Access**" | 这是订阅依赖的最强证据，应写进正文 |
+| 3 | amazonRating 已从 4.5 漂到 **4.6（315）** | Rainforest 2026-10-25 | 更新 frontmatter 的 `amazonRating` |
+| 4 | 台账里 `F` 的定义重复了一行 | 本文件 | 删重复行 |
+
+### 认证状态（重要，需在正文措辞上体现）
+
+- **TOPDON 的 AutoAuth 认证表（图片，2024-02-28 版）共 23 个型号，不含 "TOPDON ONE"**
+- 型号覆盖 Phoenix 系列 / ArtiPad / UltraDiag / ArtiDiag 系列 / TopScan / SmartDiag
+- 该表早于 ONE 上市，**不能据此断定 ONE 不支持**，但也**没有产品级认证证据**
+- 现有正文的 SGW 表述来源是 **listing 自述（L）**，属二手性质
+
+**结论**：正文措辞应保留"TopDon lists…"这种归属式表述（现状已如此），但**不宜升级为"已认证"**。若日后拿到含 ONE 的新版认证表，再改为事实陈述。
