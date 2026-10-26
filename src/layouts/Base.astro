@@ -69,11 +69,18 @@ const cfToken = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
           <script is:inline define:vars={{ gaId }}>
             window.dataLayer = window.dataLayer || [];
             function gtag(){window.dataLayer.push(arguments);}
+            // 必须挂到 window：同意条通过 window.gtag 发送 consent update。
+            // define:vars 会把脚本包进 IIFE，不挂 window 的话外部永远拿不到 gtag。
+            window.gtag = gtag;
+            // 老访客若已同意过，默认值直接给 granted，
+            // 否则首个 pageview 会以无 cookie 的 ping 发出，进不了报表。
+            var storedConsent = null;
+            try { storedConsent = localStorage.getItem('tpa-consent'); } catch (e) {}
             gtag('consent', 'default', {
               ad_storage: 'denied',
               ad_user_data: 'denied',
               ad_personalization: 'denied',
-              analytics_storage: 'denied',
+              analytics_storage: storedConsent === 'granted' ? 'granted' : 'denied',
               wait_for_update: 500,
             });
             gtag('js', new Date());

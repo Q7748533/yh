@@ -45,8 +45,12 @@
     } catch (e) {}
 
     function apply(value) {
+      var payload = { analytics_storage: value };
       if (typeof window.gtag === 'function') {
-        window.gtag('consent', 'update', { analytics_storage: value });
+        window.gtag('consent', 'update', payload);
+      } else {
+        // 兜底：即使 gtag 还没就绪（或未挂到 window），也把更新排进 dataLayer
+        (window.dataLayer = window.dataLayer || []).push(['consent', 'update', payload]);
       }
       try {
         localStorage.setItem(KEY, value);
