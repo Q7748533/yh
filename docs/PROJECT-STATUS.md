@@ -236,6 +236,31 @@
 
 **待办**：GSC 需重新提交 sitemap。
 
+### 根因确认：挂载 GitHub 触发了源码部署（已处置）
+
+Pages 项目 `yh` 在某个时间点被挂上了 GitHub 集成（`source.type = github`，repo `Q7748533/yh`），但 **`build_config.build_command` 是空字符串**。
+
+Cloudflare 收到 push 后不构建，**直接把仓库根目录当静态站点发布**。实测那个部署：
+
+| 路径 | 状态 |
+|---|---|
+| `/package.json` | 200 |
+| `/astro.config.mjs` | 200 |
+| `/src/pages/index.astro` | 200 |
+| `/index.html` | 404 |
+
+部署触发类型印证：十几个部署里唯一坏掉的 `d4b93d0b` 是 `github:push`，其余全是 `ad_hoc`（手动）。
+
+**安全检查**：`.env` / `.git/config` / `.env.production` / `wrangler.toml` 在该部署上全部 404（`.env` 被 gitignore，未进仓库）→ **无凭证泄漏**，仅源码短暂公开。
+
+**处置**：`production_deployments_enabled` 已设为 `false`。仓库仍连接（可用于 PR 预览），但 **push 不再影响生产**，发布只走 `npm run deploy`。
+
+### 新增 npm run health
+
+`scripts/health.mjs`：检查静态资源（sitemap / rss / favicon / robots）+ sitemap 结构 + 测评页抽样，每个关键路径请求 3 次——**只命中一次不算通过**，因为事故当天同一 URL 有 70–90% 返回 404。
+
+反向验证：对残缺部署 `d4b93d0b` 运行返回退出码 **1**，对生产返回 **0**。
+
 ### 部署凭证（已解决）
 
 令牌已写入 `.env` 的 `CLOUDFLARE_API_TOKEN`（gitignore 覆盖），`npm run deploy` 恢复可用。
@@ -285,3 +310,5 @@
 23. **`define:vars` + `is:inline` 会引入 IIFE 作用域**：需要全局访问的函数必须显式 `window.xxx = ...`，否则外部拿不到（事故：`window.gtag` 未赋值 → 同意信号发不出 → GA4 零数据两天）
 24. **静默失败比报错危险**：UI 反馈正常（横幅消失、localStorage 写入）会掩盖功能失效。验证要抓外部可观测信号（如 `_ga` cookie），不是读代码
 25. **临时测试页放在 `dist/` 会随部署上线**：本次三个 `ga-test*.html` 差点被发布，部署前必须删除并线上确认 404
+26. **挂 GitHub 到 Pages 必须配 build_command**：留空时 Cloudflare 不构建，直接把仓库根目录当站点发布——源码会公开，且首页 404。项目 `yh` 曾因此整站静态资源 404 两天
+27. **`npm run health` 是部署后的必跑项**：只测 `/` 会漏掉 sitemap/favicon/og 全线故障；健康检查要对同一路径请求多次，单次命中不算通过
