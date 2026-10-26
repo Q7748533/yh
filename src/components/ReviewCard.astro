@@ -26,7 +26,7 @@ const alt = imageAlt ?? `${title} product image`;
 >
   {
     image && (
-      <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-slate-50">
+      <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-white">
         <Image src={image} alt={alt} widths={[80, 160]} sizes="80px" class="h-full w-full object-contain p-1.5" loading="lazy" />
       </div>
     )
@@ -54,7 +54,7 @@ const alt = imageAlt ?? `${title} product image`;
   </div>
 
   <div class="flex shrink-0 items-center justify-between gap-4 sm:flex-col sm:items-end sm:gap-1">
-    {priceUsd !== undefined && <span class="text-base font-bold text-slate-900">${priceUsd.toFixed(0)}</span>}
+    {priceUsd !== undefined && <span class="text-base font-bold text-slate-900">${priceUsd.toFixed(2)}</span>}
     <span class="text-sm font-medium text-blue-700 group-hover:underline">Read review →</span>
   </div>
 </a>

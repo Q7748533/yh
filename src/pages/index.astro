@@ -86,7 +86,7 @@ const jsonLd = [
           >
             {
               featured.data.heroImage && (
-                <div class="flex aspect-[16/10] items-center justify-center border-b border-slate-100 bg-slate-50 p-6">
+                <div class="flex aspect-[16/10] items-center justify-center border-b border-slate-100 bg-white p-6">
                   <Image
                     src={featured.data.heroImage}
                     alt={featured.data.imageAlt ?? `${featured.data.product} — ${featured.data.brand}`}
@@ -104,7 +104,6 @@ const jsonLd = [
                 <span class="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-amber-900 uppercase">
                   Latest review
                 </span>
-                <span class="text-xs text-slate-400">{featured.data.updatedAt.toISOString().slice(0, 10)}</span>
               </div>
 
             <p class="mt-5 text-xs font-semibold tracking-wide text-blue-700 uppercase">{featured.data.brand}</p>
@@ -112,20 +111,22 @@ const jsonLd = [
               {featured.data.product}
             </p>
 
-            <div class="mt-5 flex items-end gap-4">
+            <div class="mt-5 flex items-end justify-between gap-4">
               <div class="flex items-baseline gap-1">
                 <span class="text-5xl leading-none font-bold text-slate-900">{featured.data.rating.toFixed(1)}</span>
                 <span class="text-sm text-slate-400">/ 5</span>
               </div>
-              <div class="pb-1">
-                <p class="text-sm font-semibold text-slate-900">
-                  {featured.data.priceUsd !== undefined ? `$${featured.data.priceUsd.toFixed(0)}` : '—'}
+              <div class="text-right">
+                <p class="text-lg leading-tight font-semibold text-slate-900">
+                  {featured.data.priceUsd !== undefined ? `$${featured.data.priceUsd.toFixed(2)}` : '—'}
                 </p>
-                <p class="text-xs text-slate-500">price checked</p>
+                <p class="mt-1 text-[11px] text-slate-500">
+                  price checked {(featured.data.priceCheckedAt ?? featured.data.updatedAt).toISOString().slice(0, 10)}
+                </p>
               </div>
             </div>
 
-            <div class="mt-5 grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
+            <div class="mt-5 flex flex-wrap gap-x-8 gap-y-2 border-t border-slate-100 pt-4">
               <div>
                 <p class="text-[11px] text-slate-400 uppercase">Type</p>
                 <p class="mt-0.5 text-xs font-medium text-slate-700">

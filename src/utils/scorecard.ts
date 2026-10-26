@@ -123,7 +123,7 @@ export function buildScorecardSvg(data: ScorecardData): string {
   <g>${stars(data.rating, 1136, 156)}</g>
 
   <text x="1136" y="424" font-family="${FONT}" font-size="40" font-weight="bold" fill="#0F172A" text-anchor="end">${
-    data.priceUsd !== undefined ? `$${data.priceUsd.toFixed(0)}` : ''
+    data.priceUsd !== undefined ? `${data.priceUsd.toFixed(2)}` : ''
   }</text>
   <text x="1136" y="454" font-family="${FONT}" font-size="16" fill="#94A3B8" text-anchor="end">price checked ${checked}</text>
 </svg>`;
