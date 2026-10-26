@@ -224,47 +224,29 @@
 | **TOPDON AD600S（B09KZTYD18）** | 汽车诊断 | 4.2 | **标题"9 项 reset"vs 脚注"30 项"**（激活 30 天后开 30 天试用，到期回到 9 项）、规格表写 Corded Electric 同页又要求每周充电、**2017+ FCA 需 AutoAuth $50/年**、同型号两个 listing 差 $10 |
 | Wavytalk Steamline Pro（B0DCK8P752） | 美发 | 4.0 | 0.5ml/min 与水箱容量矛盾、四项百分比无测试方法、文案 325 vs 机身 320、$16.99/月 = 购机价 229%/年 |
 
-## 十一、未结事故（2026-10-26 19:50）
+## 十一、事故记录（2026-10-26，已解决）
 
-### 自定义域名间歇性 404：静态文件在 apex 上时好时坏
+### apex 域名静态文件间歇 404 —— 生产部署残缺
 
-**现象**：`/sitemap-index.xml`、`/sitemap-0.xml`、`/rss.xml`、`/favicon.svg`、`/og/*.png` 在 `thepriceaudit.com` 上**间歇性返回 404**，同一时刻重试会时而 200。
+**根因**：Pages 项目 `yh` 的生产部署是一个残缺旧版本 `d4b93d0b`——sitemap / favicon / og 图全部缺失，且不含 14:05 的 GA 修复。旧部署 `7c111afc` 是完整的，边缘在两个部署之间摇摆，造成 70–90% 的 404。
 
-**实测数据**（连续请求，已绕过本机代理）：
+**解决**：重新部署，生产更新为 `c21f4fa3`（canonical），10 个端点各 3/3 通过，sitemap 连续 15 次全部 200。
 
-| 目标 | 结果 |
-|---|---|
-| `thepriceaudit.com/sitemap-index.xml` | 10 次：200 ×1，404 ×9 |
-| 同上，另一轮 | 10 次：200 ×3，404 ×7 |
-| `thepriceaudit.com/og/*.png` | 5 次：200 ×1，404 ×4 |
-| **`7c111afc.yh-4pn.pages.dev/sitemap-index.xml`** | **10 次：全部 200** |
+**完整过程见 `docs/incident-2026-10-26.md`**（含排除清单与响应头证据）。
 
-**结论**：**部署产物是完整的**（固定部署 URL 100% 命中），问题在**自定义域名的路由层**——请求在正确源与另一个不含这些文件的源之间摇摆。
+**待办**：GSC 需重新提交 sitemap。
 
-**已排除**：边缘缓存（响应头 `Cache-Control: no-store`、`cf-cache-status: DYNAMIC`）、IPv6 分流（IPv4 同样摇摆）、`_redirects` / `_headers` 规则（无相关条目）、`.assetsignore` / wrangler 配置（均不存在）。
+### 部署凭证（已解决）
 
-**需要人工处理**（我无 CF 后台权限）：
-
-1. DNS 里 `thepriceaudit.com` 的 A / AAAA / CNAME 记录——应只有 Pages 绑定，不应有遗留旧主机记录
-2. Pages → 项目 → 自定义域名——确认只有一个绑定
-3. 清一次 Cloudflare 缓存（Caching → Purge Everything）
-
-**影响**：Googlebot 抓 sitemap 有约 70–90% 概率拿到 404 → GSC 报「无法抓取」→ 页面可能因此未被充分发现。**这可能是 GSC 至今没有查询数据的真正原因**，而不只是 48 小时窗口。
-
-### 部署凭证失效
-
-`npm run deploy` 当前失败，报错要求 `CLOUDFLARE_API_TOKEN`。本机未设置该变量，wrangler 的 OAuth 会话也不可用（CLI 判定为非交互环境无凭证）。
-
-**需要**：用户在终端执行 `npx wrangler login`，或提供 API Token 写入 `.env`（`.env` 已被 gitignore 覆盖）。
-
+令牌已写入 `.env` 的 `CLOUDFLARE_API_TOKEN`（gitignore 覆盖），`npm run deploy` 恢复可用。
 
 ## 十二、待办
 
 | 优先级 | 事项 | 状态 |
 |---|---|---|
-| **紧急** | **apex 域名间歇 404**：sitemap/favicon/og 约 70–90% 返回 404，固定部署 URL 100% 正常 → 查 DNS 记录、Pages 自定义域名绑定、清缓存（见第十一节） | **未解决** |
-| **紧急** | **恢复部署能力**：`wrangler login` 或写入 `CLOUDFLARE_API_TOKEN`，否则无法发布任何改动 | **未解决** |
-| **高** | **GSC 两个报告发布 + 10-26 19:31 后验证**：库中「查询」「Google 自然搜索流量」需点发布；48h 窗口 19:31 关闭 | **进行中** |
+| ✅ | ~~apex 域名间歇 404~~：根因是生产部署残缺，重新部署后 15/15 通过 | **已解决**（`c21f4fa3`） |
+| ✅ | ~~恢复部署能力~~：令牌已写入 `.env` | **已解决** |
+| **高** | **GSC 重新提交 sitemap**（404 期间大概率报抓取失败）+ 两个报告发布 | **待办** |
 | ✅ | ~~TOPDON ONE 复审 4 项~~ | **已完成**（`97349fc`） |
 | ✅ | ~~Wavytalk 复审~~：发现保修表述错误，已修 | **已完成**（`f91bd92`） |
 | ✅ | ~~正文硬编码评价数~~：与决策卡冲突（4.6 vs 4.5），三篇全部移除 | **已完成**（`a4b705c`） |
