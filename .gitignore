@@ -23,3 +23,6 @@ Thumbs.db
 
 # price cache
 .price-cache/
+
+# 本地预览文件
+preview-*.html
