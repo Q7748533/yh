@@ -72,3 +72,23 @@
 正文里对六项 reset 的用途解释（机油归零、转向角重学、TPMS 注册、电池注册、EPB 回缩、节气门重学）与"四系统相对基础读码器的差别"，都是**该类功能的通用用途**，不是对 AD500 特定行为的断言。台账在此说明，避免被读成实测结论。
 
 "不能做双向控制 / 无 ECU 编码"来自 listing 未声明这些能力 + specs 里 `Bidirectional control: No`，属**缺席判断**，已在 specs 与正文同时标注。
+
+## 逐条核对后的修正（2026-10-27 用户要求全文复核）
+
+用户问"所有内容都核对过、没有编造吗"。逐条复核后，**有三处需要收紧**，已全部修改：
+
+| 原文 | 问题 | 改成 | 依据 |
+|---|---|---|---|
+| "a car that fails inspection on that light is a car you cannot register" | **过度概括**。美国各州检查规则不同，多数州的排放检查只查 MIL（故障灯），不查气囊灯；不能一概说"无法注册" | 删除监管断言，只保留可核实的部分："an airbag warning light cannot be read or cleared without restraint-system access" | 无可靠来源支撑原句 → 按"拿不出来源就不写"处理 |
+| "There is no ECU coding and no module programming" | **缺席推断写成绝对事实**。listing 没提，不等于设备绝对没有 | "The listing claims neither ECU coding nor module programming" | listing 原文未声明；specs 里 `Bidirectional control: No` |
+| "AutoAuth charges $50 a year per shop, covering six users" | **对个人用户可能误导**。原文只说 per shop；技师账号免费但须挂靠店铺；官网**未公布个人价** | 补"per shop"、$2/年/人，并明写"官网未公布个人独用的价格" | TOPDON AutoAuth 页原文（2026-10-27 重新抓取） |
+| "no cartridge" | 用词不当（扫描仪没有耗材匣） | "no consumable" | — |
+
+### 复核结论（供日后参考）
+
+- **A 类（一手可查）**：价格、评分、规格、六项 reset、认证表版本号、保修期、保障计划计费方式 —— 全部有源
+- **B 类（自算）**：$185.98 / $62 / $194.98 / $39 / $203.88 / $224.98 / $39 —— 算式已列，可复算
+- **C 类（通用常识）**：六项 reset 的用途、四系统与通用 OBD2 的差别 —— 非品牌断言
+- **D 类（车主归纳）**：好评点、连接问题、覆盖投诉、两位车主被要求付费 —— 均标注为归纳/未证实
+
+**没有发现编造，但发现三处"说过头"。** 说明：本核对基于公开来源，无法覆盖"该设备在具体车型上的实际表现"——那需要实机测试，本篇标注为 research。
