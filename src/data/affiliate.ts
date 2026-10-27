@@ -25,6 +25,10 @@ export const AFFILIATE_LINKS: Record<string, AffiliateEntry> = {
     url: 'https://pwiz.co/go/c9qjxpgrfmw4jzk1',
     note: 'TOPDON AD600S OBD2 扫描仪',
   },
+  B08XK3DJ42: {
+    url: 'https://pwiz.co/go/wha9eys7g3vpmjy3',
+    note: 'TOPDON AD500 (ArtiDiag500) OBD2 扫描仪',
+  },
 };
 
 /**
