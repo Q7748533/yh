@@ -35,8 +35,7 @@ const chartH = items.length * rowH + 10;
             </text>
             <rect x={labelW} y={y + 3} width={w} height={16} rx="3" fill="#2563eb" />
             <text x={labelW + w + 8} y={y + 15} font-size="12" font-weight="600" fill="#1e293b">
-              {item.value}
-              {item.unit ?? ''}
+              {/^[$€£¥]$/.test(item.unit ?? '') ? `${item.unit}${item.value}` : `${item.value}${item.unit ?? ''}`}
             </text>
           </g>
         );
