@@ -52,3 +52,13 @@
 | "3K+ bought in past month" / "Amazon's Choice" | L | 每日变动的社会证明，写进正文会漂移 |
 | 竞品对比（Dyson 等） | — | 未核实竞品当前价格，不做倍数比较 |
 | "650W 是虚假宣传" | — | 无法证明主观意图，只能证明数字不相容 |
+
+## 主图来源与风险记录（2026-10-30 补）
+
+- 文件：`src/assets/reviews/mohomo-nova-v5/device.jpg`，1306×1492，纯白底，无营销文字
+- 原文件名 `61RPTRlM5aL._AC_SL1500_.jpg` —— **Amazon CDN 的命名格式**，即该图取自 Amazon 商品页
+- 用户（站点所有者）明确指示使用此图
+
+**风险声明**：站点既有规则是"Amazon 商品图不可用"，依据是 Associates 合同的图片使用限制（需通过 PA-API / SiteStripe 获取，且需相应资格）。本次按所有者指示使用，风险由账号承担。若日后收到合规提醒，替换为厂商官方图或自拍图即可，不影响文章其余内容。
+
+- 版权署名按"品牌方产品图"处理：`Image: mohomo (manufacturer product image, unmodified)`
