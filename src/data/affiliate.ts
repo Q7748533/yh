@@ -29,6 +29,10 @@ export const AFFILIATE_LINKS: Record<string, AffiliateEntry> = {
     url: 'https://pwiz.co/go/wha9eys7g3vpmjy3',
     note: 'TOPDON AD500 (ArtiDiag500) OBD2 扫描仪',
   },
+  B0F21GQ1DG: {
+    url: 'https://pwiz.co/go/14p04q2kmhgdt8rp',
+    note: 'mohomo Nova V5 无线吸尘器',
+  },
 };
 
 /**

@@ -11,6 +11,11 @@ export const categoryMeta: Record<string, { name: string; intro: string }> = {
     intro:
       'Automotive diagnostic tools span $50 code readers to $2,000 flagship tablets, and the gap between them is mostly about bidirectional control, ECU coding and J2534 pass-thru rather than raw scan speed. Our reviews break down what each tier actually delivers: supported protocols, vehicle coverage, software update cadence and the long-term cost of subscriptions. We compare specifications across brands, cross-check them against independent professional feedback, and flag where marketing claims outrun the datasheet. Every comparison on this page is rebuilt from primary spec sheets, so you can see exactly which numbers each claim rests on before spending workshop-grade money.',
   },
+  'cordless-vacuums': {
+    name: 'Cordless Vacuums',
+    intro:
+      'A cordless vacuum is the one appliance where headline figures are least comparable between brands: suction quoted in kilopascals, motors quoted in watts, and runtimes quoted in the best case the battery can never sustain. Watt-hours settle it, and most listings do not publish them. Our reviews convert the claims into what the pack can actually deliver, check the manufacturer against its own retail copy, and price the part that fails first — the battery, which on a $120 machine can cost $50 to replace. We say plainly which figures we could corroborate, which appear in one place only, and which contradict each other.',
+  },
 };
 
 export function getCategoryMeta(slug: string) {
